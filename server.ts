@@ -1,5 +1,6 @@
 import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
+import cookieParser = require("cookie-parser");
+import errorHandler = require("errorhandler");
 import express = require('express');
 interface Error {
   status?: number;
@@ -65,7 +66,32 @@ export class Server {
    * @method config
    */
   public config() {
-    //empty for now
+    //add static paths
+    this.app.use(express.static(path.join(__dirname, "client/src/")));
+
+    //configure pug
+    // this.app.set("views", path.join(__dirname, "views"));
+    // this.app.set("view engine", "pug");
+
+    //use json form parser middlware
+    this.app.use(bodyParser.json());
+
+    //use query string parser middlware
+    this.app.use(bodyParser.urlencoded({
+      extended: true
+    }));
+
+    //use cookie parser middleware
+    this.app.use(cookieParser("SECRET_GOES_HERE"));
+
+    //catch 404 and forward to error handler
+    this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+      err.status = 404;
+      next(err);
+    });
+
+    //error handling
+    this.app.use(errorHandler());
   }
 
   /**
@@ -76,14 +102,14 @@ export class Server {
    */
   public routes() {
     // catch 404 and forward to error handler
-    this.app.use(function (req: express.Request, res:express.Response, next:express.NextFunction) {
+    this.app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
       const err: Error = new Error('Not Found');
       err.status = 404;
       next(err);
     });
 
     // error handler
-    this.app.use((err:Error, req:express.Request, res:express.Response,next:express.NextFunction) => {
+    this.app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
       // set locals, only providing error in development
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};

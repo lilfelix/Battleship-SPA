@@ -1,0 +1,6 @@
+node_modules
+package-lock.json
+ package.json
+client/.*
+client/package*
+client/e2e
