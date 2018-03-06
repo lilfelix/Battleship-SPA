@@ -32,6 +32,7 @@
     "express": "^4.16.2",
     "mysql": "^2.15.0",
     "reflect-metadata": "^0.1.12",
+    "tslint": "^5.9.1",
     "typeorm": "^0.1.14",
     "ws": "^4.1.0"
   }
