@@ -6,3 +6,9 @@ Innan ni börjar på projektet behöver ni få er projektspecifikation godkänd.
 
 Tänk på att hålla en någolunda snygg och tydlig githistorik där det syns att alla jobbat på projektet. Försök att hålla commits så små som möjligt (atomic). 
 
+
+### TODO
+
+
+#### Resources
+https://github.com/Microsoft/TypeScript-Node-Starter#typescript-node-starter

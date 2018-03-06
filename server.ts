@@ -1,12 +1,14 @@
 import * as bodyParser from "body-parser";
+import * as path from "path";
 import cookieParser = require("cookie-parser");
 import errorHandler = require("errorhandler");
 import express = require('express');
+import "reflect-metadata";
+
 interface Error {
   status?: number;
   message?: string;
 }
-import * as path from "path";
 
 /**
  * The server.
