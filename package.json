@@ -1,0 +1,33 @@
+{
+  "name": "projekt",
+  "version": "1.0.0",
+  "description": "Ni ska lämna in er kod till projektet här. Det är okej att även ha projektet publikt på github om ni vill, men då behöver ni även pusha projektet hit. Behöver ni hjälp med git är ni välkomna att fråga assistenterna.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- bin/www.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gits-15.sys.kth.se:felixlil/project-Intnet18.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/node": "^9.4.6",
+    "nodemon": "^1.17.1",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "@types/ws": "^4.0.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "ws": "^4.1.0"
+  }
+}
