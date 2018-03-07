@@ -23,7 +23,6 @@ export class User {
         cascadeInsert: true,
         cascadeRemove: true
     })
-    @JoinColumn()
     highscore: Highscore;
 
     // A user can participate in many games. A game can have many users

@@ -1,8 +1,13 @@
-import {Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, PrimaryColumn} from "typeorm";
 import {User} from './User';
 
 @Entity()
 export class Highscore {
+
+    @PrimaryColumn()
+    @OneToOne(type => User, user => user.highscore)
+    @JoinColumn()
+    user: User;
 
     @Column()
     numGames: number;
@@ -12,8 +17,5 @@ export class Highscore {
 
     @Column()
     numLost: number;
-
-    @OneToOne(type => User, user => user.highscore)
-    user: User;
 
 }
