@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { User } from './User'
+import { Board } from "./Board";
 
 @Entity()
 export class Game {
@@ -20,5 +21,9 @@ export class Game {
 
     @Column()
     finished: boolean;
+
+    // A board has only one game. A game has many (2) boards
+    @OneToMany(type => Board, board => board.game)
+    boards: Board[];
 
 }

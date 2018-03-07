@@ -1,18 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Timestamp } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany, ManyToMany, JoinTable, Timestamp, ManyToOne } from "typeorm";
 import { User } from './User'
 
 @Entity()
-export class Game {
+export class Message {
 
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(type => User)
-    @JoinColumn()
+    @ManyToOne(type => User, user => user.sentMsgs)
     sender: User
 
-    @OneToOne(type => User)
-    @JoinColumn()
+    @ManyToOne(type => User, user => user.receivedMsgs)
     recipient: User //undefined if sent to all?
 
     @Column()

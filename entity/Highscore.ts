@@ -14,7 +14,6 @@ export class Highscore {
     numLost: number;
 
     @OneToOne(type => User, user => user.highscore)
-    @JoinColumn()
     user: User;
 
 }
