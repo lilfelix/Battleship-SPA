@@ -1,5 +1,17 @@
 <div *ngIf="!loggedIn" class="container">
-    <h4>Enter username and passord, and press enter to login</h4>
-    <input #box (keyup.enter)="onEnter(box.value)">
-    <p>{{username}}</p>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <div class="form-group">
+      <label for="usernameInput">Username</label>
+      <input type="text" class="form-control" id="usernameInput" aria-describedby="usernameHelp" placeholder="Enter username" required
+        [(ngModel)]="username" name="username"> TODO: remove this {{username}}
+      <!-- <small id="usernameHelp" class="form-text text-muted">We'll never share your login credentials with anyone else.</small> -->
+    </div>
+    <div class="form-group">
+      <label for="passwordInput">Password</label>
+      <input type="password" class="form-control" id="passwordInput" placeholder="Password" required
+       [(ngModel)]="password" name="password"> TODO: remove this {{password}}
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!loginForm.form.valid">Login</button>
+  </form>
+
 </div>

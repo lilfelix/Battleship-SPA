@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -7,7 +8,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  username = '';
+  public username: string;
+  private password: string;
   loggedIn = false;
 
   constructor() { }
@@ -15,8 +17,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  onEnter(username: string) {
-    this.username = username;
+  onSubmit() {
     this.loggedIn = true;
   }
 }
