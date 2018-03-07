@@ -1,0 +1,5 @@
+<div *ngIf="!loggedIn" class="container">
+    <h4>Enter username and passord, and press enter to login</h4>
+    <input #box (keyup.enter)="onEnter(box.value)">
+    <p>{{username}}</p>
+</div>

@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+
+h4 + div {
+    background-color: #f7f7f9;
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px; 
+}
