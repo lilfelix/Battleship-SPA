@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,14 +11,24 @@ export class LoginComponent implements OnInit {
 
   public username: string;
   private password: string;
+  private token: string;
   loggedIn = false;
 
-  constructor() { }
+  constructor(private loginService: LoginService) { }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    this.loggedIn = true;
+    const loginObj = { username: this.username, password: this.password };
+    this.loginService.requestLogin(loginObj)
+      .subscribe((response: any) => {
+        if (response.status === 'success') {
+          this.token = response.token;
+          this.loggedIn = true;
+        } else {
+          alert('invalid login!');
+        }
+      });
   }
 }
