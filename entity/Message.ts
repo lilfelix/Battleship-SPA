@@ -16,6 +16,6 @@ export class Message {
     @Column()
     text: string;
 
-    @Column()
-    timestamp: Timestamp;
+    @Column('timestamp')
+    timestamp: number;
 }

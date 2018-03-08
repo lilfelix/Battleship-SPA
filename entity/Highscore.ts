@@ -4,7 +4,9 @@ import {User} from './User';
 @Entity()
 export class Highscore {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
+    id: number;
+
     @OneToOne(type => User, user => user.highscore)
     @JoinColumn()
     user: User;

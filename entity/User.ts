@@ -16,7 +16,10 @@ export class User {
     @Column()
     name: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+        default: null 
+    })
     pwHash: string;
 
     @OneToOne(type => Highscore, highscore => highscore.user, {
