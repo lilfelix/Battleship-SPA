@@ -3,7 +3,8 @@ import * as path from "path";
 import errorHandler = require("errorhandler");
 import express = require('express');
 import "reflect-metadata";
-const jwt = require('jwt-express');
+import jwt from 'express-jwt';
+import * as api from './routes/api';
 
 interface Error {
   status?: number;
@@ -58,7 +59,11 @@ export class Server {
    * @method api
    */
   public api() {
-    //empty for now
+
+    //add static paths
+    this.app.use(express.static(path.join(__dirname, "client/src/dist/")));
+
+    // this.app.use('/')
   }
 
   /**
@@ -69,9 +74,6 @@ export class Server {
    */
   public config() {
 
-    //add static paths
-    this.app.use(express.static(path.join(__dirname, "client/src/")));
-
     //use json form parser middlware
     this.app.use(bodyParser.json());
 
@@ -81,7 +83,7 @@ export class Server {
     }));
 
     // Initialize Jason Web Token middleware with secret
-    this.app.use(jwt.init('E#38w85!Swu40g9a^mdM6GlQ'))
+    // this.app.use(jwt.init('E#38w85!Swu40g9a^mdM6GlQ'))
 
     //catch 404 and forward to error handler
     this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
