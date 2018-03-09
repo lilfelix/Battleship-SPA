@@ -5,8 +5,8 @@ import cookieParser from 'cookie-parser';
 import errorHandler from "errorhandler";
 import 'jsonwebtoken';
 import jwt from 'express-jwt';
+import logger = require('morgan');
 import "reflect-metadata";
-// const apii: express.Router = require('./routes');
 import { router } from './routes';
 
 interface Error {
@@ -74,6 +74,7 @@ export class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(cookieParser());
+    this.app.use(logger('dev'));
   }
 
   /**
