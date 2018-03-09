@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { WebsocketService } from './websocket.service';
+import { LoginService } from './login/login.service';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { WebsocketService } from './websocket.service';
     FormsModule,
     HttpClientModule
   ],
-  providers: [WebsocketService],
+  providers: [WebsocketService, LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

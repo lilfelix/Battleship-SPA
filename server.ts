@@ -6,6 +6,8 @@ import errorHandler from "errorhandler";
 import 'jsonwebtoken';
 import jwt from 'express-jwt';
 import "reflect-metadata";
+// const apii: express.Router = require('./routes');
+import { router } from './routes';
 
 interface Error {
   status?: number;
@@ -84,6 +86,9 @@ export class Server {
 
     // Static content
     this.app.use('/', express.static(path.join(__dirname, "client/dist/")));
+
+    // Api routes
+    this.app.use('/', router);
 
     // Error handling
     this.app.use(errorHandler());

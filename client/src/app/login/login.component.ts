@@ -23,9 +23,11 @@ export class LoginComponent implements OnInit {
     const loginObj = { username: this.username, password: this.password };
     this.loginService.requestLogin(loginObj)
       .subscribe((response: any) => {
-        if (response.status === 'success') {
+        console.dir(response);
+        if (response.success === true) {
           this.token = response.token;
           this.loggedIn = true;
+          alert('success!');
         } else {
           alert('invalid login!');
         }
