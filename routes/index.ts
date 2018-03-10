@@ -1,3 +1,4 @@
+"use strict";
 import express from 'express';
 import path from "path";
 import bodyParser from "body-parser";
@@ -10,11 +11,11 @@ import * as handler from '../bin/requestHandler';
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
-router.post('/auth', function (req, res){
+router.post('/auth', async function (req, res){
     if (req.body.type === 'login') {
-        res.json(handler.authUser(req.body));
+        res.json(await handler.authUser(req.body));
     } else if (req.body.type === 'register') {
-        res.json(handler.createUser(req.body));
+        res.json(await handler.createUser(req.body));
     } else {
         console.log('ERROR: invalid auth request received');
         res.json({});

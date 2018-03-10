@@ -26,7 +26,7 @@ export function authUser(body: any) {
 }
 
 // { type: 'register', username: this.username, name: this.name, password: this.password }
-export async function createUser(body: any) {
+export function createUser(body: any) {
 
     return bcrypt.hash(body.password, saltRounds)
     .then(async function (hash) {
