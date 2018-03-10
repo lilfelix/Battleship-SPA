@@ -1,3 +1,24 @@
-<p>
-  lobby works!
-</p>
+<h4>Available Players</h4>
+<div class="list-group">
+  <div *ngFor="let player of players" class="list-group-item">
+    <button type="button" class="btn btn-success" (click)="challengePlayer(player);">Challenge</button>
+    <span class="badge">{{player.username}}</span>
+  </div>
+</div>
+
+<h4>Pending Challenges</h4>
+<div class="list-group">
+  <div *ngFor="let challenge of challenges" class="list-group-item">
+    <!-- If user issued challenge, it can be canceled -->
+    <div *ngIf="challenge.issuer == username">
+      <span class="badge">{{challenge.receiver}}</span>
+      <button type="button" class="btn btn-danger" (click)="cancelChallenge(challenge);">Cancel</button>
+    </div>
+    <!-- If user received challenge, it can be accepted/rejected -->
+    <div *ngIf="!challenge.receiver == username">
+      <span class="badge">{{challenge.issuer}}</span>
+      <button type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
+      <button type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
+    </div>
+  </div>
+  </div
