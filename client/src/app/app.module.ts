@@ -11,6 +11,7 @@ import { LoginService } from './login/login.service';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RegisterComponent } from './register/register.component';
+import { LobbyService } from './lobby/lobby.service';
 
 const appRoutes: Routes = [
   {
@@ -52,7 +53,7 @@ const appRoutes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [WebsocketService, LoginService],
+  providers: [WebsocketService, LoginService, LobbyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

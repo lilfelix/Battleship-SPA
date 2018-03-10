@@ -25,7 +25,6 @@ interface Error {
 export class Server {
 
   public app: express.Application;
-  public http: http.Server;
   public wss: WebSocket.Server;
 
   /**
@@ -52,26 +51,13 @@ export class Server {
 
     //create websocket server
     const server: http.Server = http.createServer(this.app);
-    this.http = server;
-    this.wss = new WebSocket.Server( { server });
+    this.wss = new WebSocket.Server({ server });
 
     //configure application
     this.config();
 
     //add routes
     this.routes();
-
-    //add api
-    this.api();
-  }
-
-  /**
-   * Create REST API routes
-   *
-   * @class Server
-   * @method api
-   */
-  public api() {
   }
 
   /**
@@ -88,10 +74,10 @@ export class Server {
   }
 
   /**
-   * Create router
+   * Create REST API routes
    *
    * @class Server
-   * @method api
+   * @method routes 
    */
   public routes() {
 
@@ -112,5 +98,5 @@ export class Server {
         client.send(JSON.stringify(data));
       }
     });
-  }  
+  }
 }

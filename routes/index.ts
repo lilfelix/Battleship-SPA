@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 import errorHandler from "errorhandler";
 import jwt from 'jsonwebtoken';
-// import jwt from 'express-jwt';
 import "reflect-metadata";
 
 const authSecret = '@9O37m1O3ISg';
@@ -12,6 +11,7 @@ export const router = express.Router();
 
 // { type: 'login', username: this.username, password: this.password };
 // { type: 'register', username: this.username, name: this.name, password: this.password }
+// Expects AuthResponse: {type, payload}
 
 router.post('/auth', function (req, res){
     if (req.body.type === 'login') {
