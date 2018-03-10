@@ -9,17 +9,22 @@ import { LoginComponent } from './login/login.component';
 import { WebsocketService } from './websocket.service';
 import { LoginService } from './login/login.service';
 import { LobbyComponent } from './lobby/lobby.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const appRoutes: Routes = [
+  { path: 'login',
+    component: LoginComponent,
+    // data: { title: 'Login'}
+  },
   { path: 'lobby',
     component: LobbyComponent,
     data: { title: 'Lobby'}
   },
   { path: '',
-    redirectTo: '/',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
-  // { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 
@@ -27,12 +32,17 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    LobbyComponent
+    LobbyComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [WebsocketService, LoginService],
   bootstrap: [AppComponent]
