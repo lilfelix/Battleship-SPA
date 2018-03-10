@@ -3,13 +3,11 @@
  * Module dependencies.
  */
 
-const Server = require('../server.ts');
-const debug = require('debug')('projekt:server');
+import {Server} from '../server';
+import  debug from 'debug'
 import WebSocket = require('ws');
 import * as http from 'http';
 import * as url from 'url';
-import { ServerOptions } from 'http2';
-
 import "reflect-metadata";
 import {createConnection, Connection, getConnection} from "typeorm";
 import {User} from "../entity/User";
@@ -34,39 +32,14 @@ createConnection().then(async connection => {
     
 }).catch(error => console.log(error)) 
 
-/** 
- * Custom class for websocket server to facilitate broadcasting
-*/
-export class CustomServer {
-
-  wss : WebSocket.Server;
-
-  constructor(serverOptions: WebSocket.ServerOptions | undefined) {
-    this.wss = new WebSocket.Server(serverOptions);
-  }
-
-  // Broadcast to all.
-  broadcast = (data: any) => {
-    this.wss.clients.forEach(function each(client: any) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data));
-      }
-    });
-
-  }
-}
 
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '3000');
-const app = Server.Server.bootstrap().app;
+const server = Server.bootstrap();
+const app = server.app;
+const wss = server.wss;
+const httpServer = server.http; // TODO replace with app.listen
 app.set('port', port);
-
-// Create HTTP server.
-const server = http.createServer(app);
-
-// Wrap server in Websocket Server 
-const customServer = new CustomServer({server});
-const wss = customServer.wss;
 
 wss.on('connection', function connection(ws: WebSocket, req: http.IncomingMessage) {
   let location;
@@ -85,9 +58,9 @@ wss.on('connection', function connection(ws: WebSocket, req: http.IncomingMessag
 });
 
 // Listen on provided port, on all network interfaces.
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+app.listen(port);
+app.on('error', onError);
+// app.on('listening', onListening);
 console.log('Server listening on port: ' + port);
 
 // Normalize a port into a number, string, or false.
@@ -132,11 +105,11 @@ function onError(error: any) {
   }
 }
 
-// Event listener for HTTP server "listening" event.
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+// // Event listener for HTTP server "listening" event.
+// function onListening() {
+//   var addr = app.address();
+//   var bind = typeof addr === 'string'
+//     ? 'pipe ' + addr
+//     : 'port ' + addr.port;
+//   debug('Listening on ' + bind);
+// }

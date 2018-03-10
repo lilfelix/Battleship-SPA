@@ -10,6 +10,22 @@ import "reflect-metadata";
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
+// { type: 'login', username: this.username, password: this.password };
+// { type: 'register', username: this.username, name: this.name, password: this.password }
+
+router.post('/auth', function (req, res){
+    if (req.body.type === 'login') {
+        // TODO
+        return true;
+    } else if (req.body.type === 'register') {
+
+    } else {
+        console.log('ERROR: invalid auth request received');
+        res.json({});
+    }
+
+});
+
 router.get('/login', function (req, res) {
 
     // if user is found and password is right

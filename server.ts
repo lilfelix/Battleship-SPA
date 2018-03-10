@@ -5,9 +5,12 @@ import cookieParser from 'cookie-parser';
 import errorHandler from "errorhandler";
 import 'jsonwebtoken';
 import jwt from 'express-jwt';
+import WebSocket = require('ws');
 import logger = require('morgan');
 import "reflect-metadata";
 import { router } from './routes';
+import * as http from 'http';
+import { ServerOptions } from 'https';
 
 interface Error {
   status?: number;
@@ -22,6 +25,8 @@ interface Error {
 export class Server {
 
   public app: express.Application;
+  public http: http.Server;
+  public wss: WebSocket.Server;
 
   /**
    * Bootstrap the application.
@@ -44,6 +49,11 @@ export class Server {
   constructor() {
     //create expressjs application
     this.app = express();
+
+    //create websocket server
+    const server: http.Server = http.createServer(this.app);
+    this.http = server;
+    this.wss = new WebSocket.Server( { server });
 
     //configure application
     this.config();
@@ -94,4 +104,13 @@ export class Server {
     // Error handling
     this.app.use(errorHandler());
   }
+
+  // Broadcast to all.
+  public broadcast = (data: any) => {
+    this.wss.clients.forEach(function each(client: any) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(data));
+      }
+    });
+  }  
 }
