@@ -5,20 +5,16 @@ import cookieParser from 'cookie-parser';
 import errorHandler from "errorhandler";
 import jwt from 'jsonwebtoken';
 import "reflect-metadata";
+import * as handler from '../bin/requestHandler';
 
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
-// { type: 'login', username: this.username, password: this.password };
-// { type: 'register', username: this.username, name: this.name, password: this.password }
-// Expects AuthResponse: {type, payload}
-
 router.post('/auth', function (req, res){
     if (req.body.type === 'login') {
-        // TODO
-        return true;
+        res.json(handler.authUser(req.body));
     } else if (req.body.type === 'register') {
-
+        res.json(handler.createUser(req.body));
     } else {
         console.log('ERROR: invalid auth request received');
         res.json({});
