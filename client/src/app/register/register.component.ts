@@ -1,27 +1,29 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoginService } from './login.service';
+import { LoginService } from '../login/login.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
   public username: string;
+  public name: string;
   private password: string;
+  private passwordRepeat: string;
 
-  constructor(private loginService: LoginService) { }
+  constructor(private authService: LoginService) { }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    const loginObj = { type: 'login', username: this.username, password: this.password };
-    this.loginService.authUser(loginObj)
+    const registerObj = { type: 'register', username: this.username, name: this.name, password: this.password };
+    this.authService.authUser(registerObj)
       .subscribe((response: AuthResponse) => {
         console.dir(response);
         if (!(Object.keys(response).length === 0)) {
@@ -29,6 +31,7 @@ export class LoginComponent implements OnInit {
           // Route to lobby page and set app.component.user to response.payload
         } else {
           alert('login failed!');
+          // Route to register page
         }
       });
   }

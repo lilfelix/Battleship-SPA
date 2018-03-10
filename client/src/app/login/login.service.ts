@@ -5,18 +5,24 @@ import { Subject } from 'rxjs/Subject';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, tap } from 'rxjs/operators';
 import { handleError } from '../httpError';
+import { User } from '../models/User';
+import { AuthResponse } from '../models/AuthResponse';
 
 @Injectable()
 export class LoginService {
 
-  private loginUrl = 'login';
-
+  private authUrl = 'auth';
   constructor(private http: HttpClient) { }
 
-  requestLogin(loginObj: any): Observable<any> {
-    return this.http.get<any>(this.loginUrl)
-      .pipe(
-        catchError(handleError('requestLogin', { status: 'failed' }))
-      );
+  // Authenticate existing or newly registered user (type property in autObj differs)
+  authUser(authObj: any): Observable<AuthResponse> {
+    const options = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
+    return this.http.post<AuthResponse>(this.authUrl, JSON.stringify(authObj), options)
+    .pipe(
+      catchError(handleError('authUser', {type: authObj.type, payload: {}, token: ''}))
+    );
   }
 }
