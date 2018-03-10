@@ -11,11 +11,21 @@ import * as handler from '../bin/requestHandler';
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
-router.post('/auth', async function (req, res){
+router.post('/auth', async function (req, res) {
     if (req.body.type === 'login') {
         res.json(await handler.authUser(req.body));
     } else if (req.body.type === 'register') {
-        res.json(await handler.createUser(req.body));
+        const result = await handler.createUser(req.body);
+
+        // Check if registration was successful. If not, {} is returned
+        if (Object.keys(result).length === 0 && result.constructor === Object) { 
+            console.log('ERROR: user registration failed');
+            res.json({});
+        } else {
+            const token = jwt.sign({ username: req.body.username }, authSecret, {expiresIn: '1d'});
+            res.cookie('token', token, { maxAge: 360000 });
+            res.json(result); // TODO remove pwHash from user obj 
+        }
     } else {
         console.log('ERROR: invalid auth request received');
         res.json({});
@@ -37,7 +47,7 @@ router.get('/login', function (req, res) {
     });
 
     // Set token cookie
-    res.cookie('token', token, {maxAge: 360000});
+    res.cookie('token', token, { maxAge: 360000 });
 
     // return the information including token as JSON
     res.json({
@@ -57,6 +67,10 @@ router.use('*', function (req, res) {
     jwt.verify(cookies.token, authSecret, function (err: any, decoded: any) {
         console.log('decoded token: ');
         console.dir(decoded);
-    }); 
+    });
 });
 
+function genToken(username: string) {
+
+    return
+}
