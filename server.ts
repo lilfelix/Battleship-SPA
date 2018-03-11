@@ -13,7 +13,7 @@ import { router } from './routes';
 import * as http from 'http';
 import { ServerOptions } from 'https';
 import { User } from './entity/User';
-import {createConnection, Connection, getConnection, getRepository} from "typeorm";
+import { createConnection, Connection, getConnection, getRepository } from "typeorm";
 
 interface Error {
   status?: number;
@@ -29,7 +29,9 @@ export class Server {
 
   public app: express.Application;
   public wss: WebSocket.Server;
+  public httpServer: http.Server;
   public activeUsers: User[];
+  public openSockets: Map<string, WebSocket>;
 
   /**
    * Bootstrap the application.
@@ -50,12 +52,15 @@ export class Server {
    * @constructor
    */
   constructor() {
+    this.openSockets = new Map();
+    
     //create expressjs application
     this.app = express();
+    this.app.set('port', '3000');
 
     //create websocket server
-    const server: http.Server = http.createServer(this.app);
-    this.wss = new WebSocket.Server({ server });
+    const temp = this.httpServer = http.createServer(this.app);
+    this.wss = new WebSocket.Server({ server: temp } as WebSocket.ServerOptions);
 
     //fetch active users
     this.activeUsers = [];

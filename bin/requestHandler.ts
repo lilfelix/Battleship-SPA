@@ -29,8 +29,8 @@ export async function authUser(body: any) {
         return bcrypt.compare(body.password, user.pwHash)
             .then(function (res) {
                 if (res) {
-                    console.log('authenticated user:');
-                    console.dir(user);
+                    // console.log('authenticated user:');
+                    // console.dir(user);
                     user.pwHash = '';
                     return { type: 'login', payload: user };
                 }

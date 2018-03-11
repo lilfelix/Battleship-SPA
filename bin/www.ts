@@ -3,58 +3,55 @@
  * Module dependencies.
  */
 
-import {Server} from '../server';
-import  debug from 'debug'
+import { Server } from '../server';
+import debug from 'debug'
 import WebSocket = require('ws');
-import * as http from 'http';
-import * as url from 'url';
+import http from 'http';
+import url from 'url';
 import "reflect-metadata";
-import {createConnection, Connection, getConnection} from "typeorm";
-import {User} from "../entity/User";
+import { createConnection, Connection, getConnection } from "typeorm";
+import { User } from "../entity/User";
 
 /**
  * Connect to database
  */
 createConnection().then(async connection => {
 
-    console.log("Inserting a new user into the database...");
-    const user1 = new User();
-    user1.username = "bob";
-    user1.name = "Robert Doe";
-    user1.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
-    const user2 = new User();
-    user2.username = "alice";
-    user2.name = "Alice Moe";
-    user2.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
-    await connection.manager.save([user1, user2]);
-    console.log("Saved a new user with id: " + user1.id);
-    
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
-     
-    // console.log("Here you can setup and run express/koa/any other framework.");
-    
-}).catch(error => console.log(error)) 
+  const user1 = new User();
+  user1.username = "bob";
+  user1.name = "Robert Doe";
+  user1.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
+  const user2 = new User();
+  user2.username = "alice";
+  user2.name = "Alice Moe";
+  user2.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
 
-// Get port from environment and store in Express.
-const port = normalizePort(process.env.PORT || '3000');
+  await connection.manager.save([user1, user2]);
+  const users = await connection.manager.find(User);
+}).catch(error => console.log(error))
 
 export const server = Server.bootstrap();
 const app = server.app;
 const wss = server.wss;
-app.set('port', port);
+const httpServer = server.httpServer;
+const port = 3000;
 
+// Expect username to be part of incoming client connection request
 wss.on('connection', function connection(ws: WebSocket, req: http.IncomingMessage) {
-  let location;
-  if (req.url != null)
-    location = url.parse(req.url, true);
+  let location: any;
+  if (req.url != null) {
+    location = url.parse(req.url, true).query;
+    console.log('New client connected over websocket: ' + location.username);
+    server.openSockets.set(location.username, ws);
+  }
 
   ws.on('message', function incoming(message: any) {
     console.log('received: %s', message);
   });
 
   ws.on('close', function close() {
+    server.activeUsers.filter(usr => usr.username !== location.username);
+    server.openSockets.delete(location.username);
     return ws.terminate();
   });
 
@@ -62,27 +59,11 @@ wss.on('connection', function connection(ws: WebSocket, req: http.IncomingMessag
 });
 
 // Listen on provided port, on all network interfaces.
-app.listen(port);
-app.on('error', onError);
-// app.on('listening', onListening);
+httpServer.listen(port);
+httpServer.on('error', onError);
+httpServer.on('listening', onListening);
 console.log('Server listening on port: ' + port);
 
-// Normalize a port into a number, string, or false.
-function normalizePort(val: any) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
 
 // Event listener for HTTP server "error" event.
 function onError(error: any) {
@@ -109,11 +90,11 @@ function onError(error: any) {
   }
 }
 
-// // Event listener for HTTP server "listening" event.
-// function onListening() {
-//   var addr = app.address();
-//   var bind = typeof addr === 'string'
-//     ? 'pipe ' + addr
-//     : 'port ' + addr.port;
-//   debug('Listening on ' + bind);
-// }
+// Event listener for HTTP server "listening" event.
+function onListening() {
+  var addr = httpServer.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
