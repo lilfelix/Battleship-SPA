@@ -12,6 +12,8 @@ import { AuthResponse } from '../models/AuthResponse';
 export class LoginService {
 
   private authUrl = 'auth';
+  @Output() setUserSource = new Subject<User>();
+
   constructor(private http: HttpClient) { }
 
   // Authenticate existing or newly registered user (type property in autObj differs)
@@ -24,5 +26,9 @@ export class LoginService {
     .pipe(
       catchError(handleError('authUser', {type: authObj.type, payload: {}, token: ''}))
     );
+  }
+
+  setUser(user: User) {
+    this.setUserSource.next(user);
   }
 }

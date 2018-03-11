@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../login/login.service';
 import { User } from '../models/User';
@@ -15,7 +15,6 @@ export class RegisterComponent implements OnInit {
   public name: string;
   private password: string;
   private passwordRepeat: string;
-  @Output() setUser = new EventEmitter<User>();
 
   constructor(private authService: LoginService) { }
 
@@ -29,7 +28,7 @@ export class RegisterComponent implements OnInit {
         console.dir(response);
         if (!(Object.keys(response).length === 0)) {
           alert('login successful!');
-          this.setUser.emit(response.payload as User);
+          this.authService.setUser(response.payload as User);
           // Route to lobby page and set app.component.user to response.payload
         } else {
           alert('login failed!');

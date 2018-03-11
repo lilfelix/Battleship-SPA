@@ -13,7 +13,6 @@ export class LoginComponent implements OnInit {
 
   public username: string;
   private password: string;
-  @Output() setUser = new EventEmitter<User>();
 
   constructor(private loginService: LoginService) { }
 
@@ -29,7 +28,7 @@ export class LoginComponent implements OnInit {
           alert('login failed!');
         } else {
           console.log('login successful!');
-          this.setUser.emit(response.payload as User);
+          this.loginService.setUser(response.payload as User);
           // Route to lobby page and set app.component.user to response.payload
         }
       });

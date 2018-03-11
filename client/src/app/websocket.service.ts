@@ -21,7 +21,7 @@ export class WebsocketService {
           console.log('websocketservice received from server: '); // obj.message);
           console.dir(message);
           // const arr = JSON.parse(message);
-          message.forEach(object => {
+          message.forEach((object: any) => {
             console.dir(object);
             switch (object.status) {
              default:
