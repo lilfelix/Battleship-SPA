@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 import { AuthService } from './login/login.service';
@@ -17,7 +17,7 @@ export class WebsocketService {
   constructor(private authService: AuthService, private lobbyService: LobbyService) {
     this.user = this.authService.user;
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
-    console.log('wsService OnInit username: ' + this.user.username);
+    // console.log('wsService OnInit username: ' + this.user.username);
 
     /**
      * A socket object has format {type:..., payload:...}
@@ -26,29 +26,23 @@ export class WebsocketService {
      * message: message sent to user (private or general)
      * game: a game object (info about an event in current game)
      */
-    this.socket$
-      .subscribe(
-        (message) => { // message is a JSON object
-          this.serverData.push(message);
-          console.log('websocketservice received from server: '); // obj.message);
-          console.dir(message);
-          // const arr = JSON.parse(message);
-          message.forEach((object: any) => {
+    this.socket$.subscribe(
+      (object) => {
+        this.serverData.push(object);
+        console.log('websocketservice received from server: ', object);
+        console.dir(object);
+        switch (object.type) {
+          case 'user':
+            this.lobbyService.displayNewUser(object.payload);
+            break;
+          default:
+            console.log('Unidentified object from websocket:');
             console.dir(object);
-            switch (object.type) {
-              case 'user':
-                this.lobbyService.displayNewUser(object.payload);
-                break;
-              default:
-                console.log('Unidentified message from websocket:');
-                console.dir(message);
-            }
-          });
-        },
-        (err) => console.error(err),
-        () => console.warn('Completed!')
-      );
-
+        }
+      },
+      (err) => console.error(err),
+      () => console.warn('Completed!')
+    );
   }
 
 }

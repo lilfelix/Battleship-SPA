@@ -4,6 +4,7 @@ import { Challenge } from '../models/Challenge';
 import { LobbyService } from './lobby.service';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../login/login.service';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-lobby',
@@ -18,12 +19,12 @@ export class LobbyComponent implements OnInit {
   displayChallengeSubscription: Subscription;
   displayNewUserSubscription: Subscription;
 
-  constructor(private lobbyService: LobbyService, private authService: AuthService) { }
+  constructor(private lobbyService: LobbyService, private wsService: WebsocketService) { }
 
   ngOnInit() {
 
     // Set current user
-    this.user = this.authService.user;
+    this.user = this.lobbyService.user;
 
     // GET available players from server
     this.lobbyService.getActiveUsers()

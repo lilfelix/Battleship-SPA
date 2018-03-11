@@ -7,15 +7,19 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { handleError } from '../httpError';
 import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
+import { AuthService } from '../login/login.service';
 
 @Injectable()
 export class LobbyService {
 
   private activeUsersURL = 'active';
+  public user: User;
   @Output() displayChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.user = authService.user;
+  }
 
   // GET available players from server
   getActiveUsers(): Observable<User[]> {
