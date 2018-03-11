@@ -18,12 +18,16 @@ import {User} from "../entity/User";
 createConnection().then(async connection => {
 
     console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.username = "bob";
-    user.name = "Robert Doe";
-    user.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
+    const user1 = new User();
+    user1.username = "bob";
+    user1.name = "Robert Doe";
+    user1.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
+    const user2 = new User();
+    user2.username = "alice";
+    user2.name = "Alice Moe";
+    user2.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
+    await connection.manager.save([user1, user2]);
+    console.log("Saved a new user with id: " + user1.id);
     
     console.log("Loading users from the database...");
     const users = await connection.manager.find(User);
@@ -33,10 +37,10 @@ createConnection().then(async connection => {
     
 }).catch(error => console.log(error)) 
 
-
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '3000');
-const server = Server.bootstrap();
+
+export const server = Server.bootstrap();
 const app = server.app;
 const wss = server.wss;
 app.set('port', port);

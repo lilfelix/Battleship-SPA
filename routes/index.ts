@@ -7,6 +7,8 @@ import errorHandler from "errorhandler";
 import jwt from 'jsonwebtoken';
 import "reflect-metadata";
 import * as handler from '../bin/requestHandler';
+import { server } from '../bin/www';
+import { User } from '../entity/User';
 
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
@@ -37,6 +39,7 @@ router.post('/auth', async function (req, res) {
     const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
     res.json(result); // TODO remove pwHash from user obj 
+    updateActiveUsers(result.payload);
 });
 
 // For all requests after login, authenticate token
@@ -56,4 +59,10 @@ router.use('*', function (req, res) {
 function emptyResponse(res: express.Response, msg: string) {
     console.log(msg);
     res.json({});
+}
+
+function updateActiveUsers(user: User) {
+    server.activeUsers.push(user);
+    console.log('Currently active users:');
+    console.dir(server.activeUsers);
 }

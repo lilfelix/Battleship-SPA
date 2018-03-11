@@ -1,3 +1,4 @@
+"use strict";
 import express from 'express';
 import path from "path";
 import bodyParser from "body-parser";
@@ -11,6 +12,8 @@ import "reflect-metadata";
 import { router } from './routes';
 import * as http from 'http';
 import { ServerOptions } from 'https';
+import { User } from './entity/User';
+import {createConnection, Connection, getConnection, getRepository} from "typeorm";
 
 interface Error {
   status?: number;
@@ -26,6 +29,7 @@ export class Server {
 
   public app: express.Application;
   public wss: WebSocket.Server;
+  public activeUsers: User[];
 
   /**
    * Bootstrap the application.
@@ -52,6 +56,9 @@ export class Server {
     //create websocket server
     const server: http.Server = http.createServer(this.app);
     this.wss = new WebSocket.Server({ server });
+
+    //fetch active users
+    this.activeUsers = [];
 
     //configure application
     this.config();
