@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
-import { LoginService } from './login/login.service';
+import { AuthService } from './login/login.service';
 import { WebsocketService } from './websocket.service';
 
 @Component({
@@ -16,10 +16,10 @@ export class AppComponent implements OnInit {
   setUserSubscription: Subscription;
   private wsService: WebsocketService;
 
-  constructor(private loginService: LoginService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.setUserSubscription = this.loginService.setUserSource
+    this.setUserSubscription = this.authService.setUserSource
     .subscribe((user: User) => { this.setUser(user); });
   }
 

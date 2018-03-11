@@ -15,20 +15,25 @@ export class LobbyComponent implements OnInit {
   players: User[];
   challenges: Challenge[] = [];
   displayChallengeSubscription: Subscription;
+  displayNewUserSubscription: Subscription;
 
   constructor(private lobbyService: LobbyService) { }
 
   ngOnInit() {
 
+    // GET available players from server
+    this.lobbyService.getActiveUsers()
+      .subscribe((players: User[]) => {
+        this.players = players;
+      });
+
+    // Subscribe to viewing new users that come online
+    this.displayNewUserSubscription = this.lobbyService.displayUserSource
+      .subscribe((user: User) => { this.players.push(user);  });
+
     // Subscribe to challenges from other players
     this.displayChallengeSubscription = this.lobbyService.displayChallengeSource
-    .subscribe((challenge: Challenge) => { this.challenges.push(challenge); });
-
-    // GET available players from server
-    this.lobbyService.getAvailablePlayers()
-    .subscribe((players: User[]) => {
-      this.players = players;
-    });
+      .subscribe((challenge: Challenge) => { this.challenges.push(challenge); });
   }
 
   challengePlayer(user: User) {

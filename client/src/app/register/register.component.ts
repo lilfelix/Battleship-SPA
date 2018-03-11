@@ -1,6 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoginService } from '../login/login.service';
+import { AuthService } from '../login/login.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export class RegisterComponent implements OnInit {
   private password: string;
   private passwordRepeat: string;
 
-  constructor(private router: Router, private authService: LoginService) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
   }

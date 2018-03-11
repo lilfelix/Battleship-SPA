@@ -9,7 +9,7 @@ import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
 
 @Injectable()
-export class LoginService {
+export class AuthService {
 
   private authUrl = 'auth';
   @Output() setUserSource = new Subject<User>();

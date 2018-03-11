@@ -11,21 +11,27 @@ import { Challenge } from '../models/Challenge';
 @Injectable()
 export class LobbyService {
 
-  private playersUrl = 'players';
+  private usersUrl = 'activeusers';
   @Output() displayChallengeSource = new Subject<Challenge>();
+  @Output() displayUserSource = new Subject<User>();
 
   constructor(private http: HttpClient) { }
 
   // GET available players from server
-  getAvailablePlayers(): Observable<User[]> {
-    return this.http.get<User[]>(this.playersUrl)
+  getActiveUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.usersUrl)
       .pipe(
-        catchError(handleError('getAvailablePlayers', []))
+        catchError(handleError('getActiveUsers', []))
       );
   }
 
   // Challenge received on websocket is displayed to user
   forwardChallenge(challenge: Challenge) {
     this.displayChallengeSource.next(challenge);
+  }
+
+  // New user logged in. Update list in lobby
+  displayeNewUser(user: User) {
+    this.displayUserSource.next(user);
   }
 }
