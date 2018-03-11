@@ -12,48 +12,31 @@ const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
 router.post('/auth', async function (req, res) {
+    var result: any;
     if (req.body.type === 'login') {
-        res.json(await handler.authUser(req.body));
+        result = await handler.authUser(req.body); // Returns auth object
+
+        // Check if authentication was successful. If not, {} is returned
+        if (Object.keys(result).length === 0 && result.constructor === Object) {
+            return emptyResponse(res, 'ERROR: user authentication failed');
+        } else {
+            result.payload.pwHash = '';
+        }
     } else if (req.body.type === 'register') {
-        const result = await handler.createUser(req.body);
+        result = await handler.createUser(req.body);
 
         // Check if registration was successful. If not, {} is returned
-        if (Object.keys(result).length === 0 && result.constructor === Object) { 
-            console.log('ERROR: user registration failed');
-            res.json({});
+        if (Object.keys(result).length === 0 && result.constructor === Object) {
+            return emptyResponse(res, 'ERROR: user registration failed');
         } else {
-            const token = jwt.sign({ username: req.body.username }, authSecret, {expiresIn: '1d'});
-            res.cookie('token', token, { maxAge: 360000 });
-            res.json(result); // TODO remove pwHash from user obj 
+            result.payload.pwHash = '';
         }
     } else {
-        console.log('ERROR: invalid auth request received');
-        res.json({});
+        return emptyResponse(res, 'ERROR: invalid auth request received');
     }
-
-});
-
-router.get('/login', function (req, res) {
-
-    // if user is found and password is right
-    // create a token with only our given payload
-    // we don't want to pass in the entire user since that has the password
-    const payload = {
-        username: req.body.username
-    };
-
-    const token = jwt.sign(payload, authSecret, {
-        expiresIn: '1d' // expires in 24 hours
-    });
-
-    // Set token cookie
+    const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
-
-    // return the information including token as JSON
-    res.json({
-        success: true,
-        token: token
-    });
+    res.json(result); // TODO remove pwHash from user obj 
 });
 
 // For all requests after login, authenticate token
@@ -70,7 +53,7 @@ router.use('*', function (req, res) {
     });
 });
 
-function genToken(username: string) {
-
-    return
+function emptyResponse(res: express.Response, msg: string) {
+    console.log(msg);
+    res.json({});
 }

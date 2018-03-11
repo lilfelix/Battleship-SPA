@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit {
   public name: string;
   private password: string;
   private passwordRepeat: string;
+  @Output() setUser = new EventEmitter<User>();
 
   constructor(private authService: LoginService) { }
 
@@ -28,6 +29,7 @@ export class RegisterComponent implements OnInit {
         console.dir(response);
         if (!(Object.keys(response).length === 0)) {
           alert('login successful!');
+          this.setUser.emit(response.payload as User);
           // Route to lobby page and set app.component.user to response.payload
         } else {
           alert('login failed!');
