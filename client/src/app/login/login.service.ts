@@ -12,6 +12,7 @@ import { AuthResponse } from '../models/AuthResponse';
 export class AuthService {
 
   private authUrl = 'auth';
+  public user: User;
   @Output() setUserSource = new Subject<User>();
 
   constructor(private http: HttpClient) { }
@@ -29,6 +30,7 @@ export class AuthService {
   }
 
   setUser(user: User) {
+    this.user = user;
     this.setUserSource.next(user);
   }
 }

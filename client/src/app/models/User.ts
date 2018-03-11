@@ -4,12 +4,12 @@ import { Highscore } from './Highscore';
 import { Message } from './Message';
 
 export class User {
-    id: number;
+    id?: number;
     username: string;
-    name: string;
-    highscore: Highscore;
-    games: Game[];
-    boards: Board[];
-    receivedMsgs: Message[];
-    sentMsgs: Message[];
+    name?: string;
+    highscore?: Highscore;
+    games?: Game[];
+    boards?: Board[];
+    receivedMsgs?: Message[];
+    sentMsgs?: Message[];
 }

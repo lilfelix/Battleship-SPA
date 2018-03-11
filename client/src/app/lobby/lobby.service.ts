@@ -11,7 +11,7 @@ import { Challenge } from '../models/Challenge';
 @Injectable()
 export class LobbyService {
 
-  private usersUrl = 'activeusers';
+  private activeUsersURL = 'active';
   @Output() displayChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
 
@@ -19,7 +19,7 @@ export class LobbyService {
 
   // GET available players from server
   getActiveUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.usersUrl)
+    return this.http.get<User[]>(this.activeUsersURL)
       .pipe(
         catchError(handleError('getActiveUsers', []))
       );

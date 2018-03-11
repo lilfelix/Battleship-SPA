@@ -3,6 +3,7 @@ import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { LobbyService } from './lobby.service';
 import { Subscription } from 'rxjs/Subscription';
+import { AuthService } from '../login/login.service';
 
 @Component({
   selector: 'app-lobby',
@@ -11,20 +12,23 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class LobbyComponent implements OnInit {
 
-  username: string;
+  user: User;
   players: User[];
   challenges: Challenge[] = [];
   displayChallengeSubscription: Subscription;
   displayNewUserSubscription: Subscription;
 
-  constructor(private lobbyService: LobbyService) { }
+  constructor(private lobbyService: LobbyService, private authService: AuthService) { }
 
   ngOnInit() {
+
+    // Set current user
+    this.user = this.authService.user;
 
     // GET available players from server
     this.lobbyService.getActiveUsers()
       .subscribe((players: User[]) => {
-        this.players = players;
+        this.players = players.filter(usr => usr.username !== this.user.username);
       });
 
     // Subscribe to viewing new users that come online

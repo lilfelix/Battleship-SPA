@@ -10,6 +10,7 @@ import * as http from 'http';
 import * as url from 'url';
 import { ServerOptions } from 'http2';
 import bcrypt from 'bcrypt';
+import { server } from '../bin/www';
 
 import "reflect-metadata";
 import { createConnection, Connection, getConnection, getRepository } from "typeorm";
@@ -17,24 +18,16 @@ import { User } from "../entity/User";
 const authSecret = '@9O37m1O3ISg';
 const saltRounds = 10;
 
-
-
 // Input { type: 'login', username: this.username, password: this.password };
 export async function authUser(body: any) {
     const repository = getRepository(User);
     const user = await repository.findOne({ username: body.username });
     if (user == null) {
         return {};
-    } else {
+    } else {
         return bcrypt.compare(body.password, user.pwHash)
             .then(function (res) {
-                if (res) {
-                    // console.log('authenticated user:');
-                    // console.dir(user);
-                    user.pwHash = '';
-                    return { type: 'login', payload: user };
-                }
-                return {};
+                return res ? { type: 'login', payload: { id: user.id, name: user.name, username: user.username } } : {};
             });
     }
 }
@@ -51,9 +44,24 @@ export function createUser(body: any) {
                 return {};
             } else {
                 const user = await repository.save({ username: body.username, name: body.name, pwHash: hash });
-                // console.log('newly registered user:');
-                // console.dir(user);
-                return { type: 'register', payload: user };
+                console.log('newly registered user:');
+                console.dir(user);
+                return user ? { type: 'register', payload: { name: user.name, username: user.username } } : {};
             }
         });
+}
+
+// Active users are those who have a websocket connection open
+export function getActiveUsers() {
+    const names: string[]  = Array.from(server.openSockets.keys());
+    // const repository = getRepository(User);
+    // const users = await repository.find({
+        // select: ["id", "name", "username"],
+    //     // relations: ["highscore", "games", "boards", "receivedMsgs", "sentMsgs"],
+    // });
+    const users: any[] = [];
+    names.forEach(n => {
+       users.push({username: n}); 
+    });
+    return users;
 }

@@ -38,22 +38,33 @@ router.post('/auth', async function (req, res) {
     }
     const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
-    res.json(result); // TODO remove pwHash from user obj 
-    updateActiveUsers(result.payload);
+    res.json(result); 
+    // updateActiveUsers(result.payload);
 });
 
-// For all requests after login, authenticate token
-router.use('*', function (req, res) {
-    const cookies = req.cookies;
-    if (cookies.token == null) {
-        console.log('token cookie is null or undefined');
-        return; // TODO 
+// // For all requests after login, authenticate token
+// router.use('*', function (req, res) {
+//     const cookies = req.cookies;
+//     if (cookies.token == null) {
+//         console.log('token cookie is null or undefined');
+//         return; // TODO 
+//     }
+//     // verify a token symmetric
+//     jwt.verify(cookies.token, authSecret, function (err: any, decoded: any) {
+//         console.log('decoded token: ');
+//         console.dir(decoded);
+//     });
+// });
+
+// Returns names of users with open websockets
+router.get('/active', function (req, res) {
+    const users = handler.getActiveUsers();
+    if (users === []) {
+        console.log('No active users :(');
+    } else {
+        console.log('Sending active users: ', users);
+        res.json(users);
     }
-    // verify a token symmetric
-    jwt.verify(cookies.token, authSecret, function (err: any, decoded: any) {
-        console.log('decoded token: ');
-        console.dir(decoded);
-    });
 });
 
 function emptyResponse(res: express.Response, msg: string) {
@@ -61,8 +72,8 @@ function emptyResponse(res: express.Response, msg: string) {
     res.json({});
 }
 
-function updateActiveUsers(user: User) {
-    server.activeUsers.push(user);
-    console.log('Currently active users:');
-    console.dir(server.activeUsers);
-}
+// function updateActiveUsers(user: User) {
+//     server.activeUsers.push(user);
+//     console.log('Currently active users:');
+//     console.dir(server.activeUsers);
+// }

@@ -3,6 +3,7 @@ import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './login/login.service';
 import { WebsocketService } from './websocket.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
