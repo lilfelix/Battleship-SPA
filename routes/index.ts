@@ -13,7 +13,7 @@ import { User } from '../entity/User';
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
 
-router.post('/auth', async function (req, res) {
+router.post('/auth', async function (req, res, next) {
     var result: any;
     if (req.body.type === 'login') {
         result = await handler.authUser(req.body); // Returns auth object
@@ -38,7 +38,8 @@ router.post('/auth', async function (req, res) {
     }
     const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
-    res.json(result); 
+    res.json(result);
+    server.broadcast({type:'user', payload: {username: req.body.username}});
     // updateActiveUsers(result.payload);
 });
 

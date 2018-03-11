@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 import errorHandler from "errorhandler";
 import 'jsonwebtoken';
+import debug = require('debug');
 import jwt from 'express-jwt';
 import WebSocket = require('ws');
 import logger = require('morgan');
@@ -104,10 +105,10 @@ export class Server {
   }
 
   // Broadcast to all.
-  public broadcast = (data: any) => {
+  public broadcast(obj: any) {
     this.wss.clients.forEach(function each(client: any) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data));
+        client.send(JSON.stringify(obj));
       }
     });
   }

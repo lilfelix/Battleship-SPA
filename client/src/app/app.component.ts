@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   public user: User;
   status = 'User: Guest';
   setUserSubscription: Subscription;
-  private wsService: WebsocketService;
+  // private wsService: WebsocketService;
 
   constructor(private authService: AuthService) {}
 
@@ -27,6 +27,5 @@ export class AppComponent implements OnInit {
   setUser(user: User) {
     this.user = user;
     this.status = 'User: ' + this.user.username;
-    this.wsService = new WebsocketService(this.user.username);
   }
 }

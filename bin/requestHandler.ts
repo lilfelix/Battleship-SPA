@@ -54,6 +54,7 @@ export function createUser(body: any) {
 // Active users are those who have a websocket connection open
 export function getActiveUsers() {
     const names: string[]  = Array.from(server.openSockets.keys());
+    console.log('keys from sockets', names);
     // const repository = getRepository(User);
     // const users = await repository.find({
         // select: ["id", "name", "username"],
