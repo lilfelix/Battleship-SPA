@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
 import { LoginService } from './login/login.service';
+import { WebsocketService } from './websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class AppComponent implements OnInit {
   public user: User;
   status = 'User: Guest';
   setUserSubscription: Subscription;
+  private wsService: WebsocketService;
 
   constructor(private loginService: LoginService) {}
 
@@ -24,5 +26,6 @@ export class AppComponent implements OnInit {
   setUser(user: User) {
     this.user = user;
     this.status = 'User: ' + this.user.username;
+    this.wsService = new WebsocketService(this.user.username);
   }
 }

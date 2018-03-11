@@ -8,11 +8,11 @@ export class WebsocketService {
   // TODO socket handles login, game and chat objects
   public socket$: WebSocketSubject<any>;
   private serverData: any[] = [];
+  private username: string;
 
-  constructor(
-    // private gameService: GameService,
-    ) {
-    this.socket$ = WebSocketSubject.create('ws://localhost:3000');
+  constructor(username: string) {
+    this.username = username;
+    this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.username);
 
     this.socket$
       .subscribe(
