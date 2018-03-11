@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../login/login.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ export class RegisterComponent implements OnInit {
   private password: string;
   private passwordRepeat: string;
 
-  constructor(private authService: LoginService) { }
+  constructor(private router: Router, private authService: LoginService) { }
 
   ngOnInit() {
   }
@@ -26,10 +27,11 @@ export class RegisterComponent implements OnInit {
     this.authService.authUser(registerObj)
       .subscribe((response: AuthResponse) => {
         console.dir(response);
+        // Route to lobby page and set app.component.user to response.payload
         if (!(Object.keys(response).length === 0)) {
           alert('login successful!');
           this.authService.setUser(response.payload as User);
-          // Route to lobby page and set app.component.user to response.payload
+          this.router.navigate(['lobby']);
         } else {
           alert('login failed!');
           // Route to register page

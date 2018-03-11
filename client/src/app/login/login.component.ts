@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from './login.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   public username: string;
   private password: string;
 
-  constructor(private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService) { }
 
   ngOnInit() {
   }
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
         } else {
           console.log('login successful!');
           this.loginService.setUser(response.payload as User);
+          this.router.navigate(['lobby']);
           // Route to lobby page and set app.component.user to response.payload
         }
       });
