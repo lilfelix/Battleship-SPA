@@ -20,21 +20,23 @@ const saltRounds = 10;
 
 
 // Input { type: 'login', username: this.username, password: this.password };
-export function authUser(body: any) {
-    return bcrypt.hash(body.password, saltRounds)
-        .then(async function (hash) {
-            const repository = getRepository(User);
-            const user = await repository.findOne({ username: body.username, pwHash: hash });
-            if (user == null) {
+export async function authUser(body: any) {
+    const repository = getRepository(User);
+    const user = await repository.findOne({ username: body.username });
+    if (user == null) {
+        return {};
+    } else {
+        return bcrypt.compare(body.password, user.pwHash)
+            .then(function (res) {
+                if (res) {
+                    console.log('authenticated user:');
+                    console.dir(user);
+                    user.pwHash = '';
+                    return { type: 'login', payload: user };
+                }
                 return {};
-            }
-            else {
-                user.pwHash = '';
-                console.log('authenticated user:');
-                console.dir(user);
-                return { type: 'login', payload: user };
-            }
-        });
+            });
+    }
 }
 
 // Input { type: 'register', username: this.username, name: this.name, password: this.password }
@@ -52,6 +54,6 @@ export function createUser(body: any) {
                 // console.log('newly registered user:');
                 // console.dir(user);
                 return { type: 'register', payload: user };
-            } 
+            }
         });
 }

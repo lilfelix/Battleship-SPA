@@ -19,8 +19,9 @@ createConnection().then(async connection => {
 
     console.log("Inserting a new user into the database...");
     const user = new User();
-    user.username = "jodo";
-    user.name = "John Doe";
+    user.username = "bob";
+    user.name = "Robert Doe";
+    user.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
     await connection.manager.save(user);
     console.log("Saved a new user with id: " + user.id);
     
@@ -38,7 +39,6 @@ const port = normalizePort(process.env.PORT || '3000');
 const server = Server.bootstrap();
 const app = server.app;
 const wss = server.wss;
-const httpServer = server.http; // TODO replace with app.listen
 app.set('port', port);
 
 wss.on('connection', function connection(ws: WebSocket, req: http.IncomingMessage) {
