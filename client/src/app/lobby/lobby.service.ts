@@ -13,9 +13,13 @@ import { AuthService } from '../login/login.service';
 export class LobbyService {
 
   private activeUsersURL = 'active';
+  private challengeURL = 'challenge';
   public user: User;
   @Output() displayChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
+  private options = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.user = authService.user;
@@ -30,8 +34,16 @@ export class LobbyService {
   }
 
   // Challenge received on websocket is displayed to user
-  forwardChallenge(challenge: Challenge) {
+  displayChallenge(challenge: Challenge) {
     this.displayChallengeSource.next(challenge);
+  }
+
+  // Send challenge to server so it can be forwarded to receiver
+  sendChallenge(challenge: Challenge) {
+    return this.http.post<Challenge>(this.challengeURL, JSON.stringify(challenge), this.options)
+    .pipe(
+      catchError(handleError('sendChallenge', {}))
+    );
   }
 
   // New user logged in. Update list in lobby

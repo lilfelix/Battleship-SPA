@@ -42,8 +42,11 @@ export class LobbyComponent implements OnInit {
   }
 
   challengePlayer(user: User) {
-    // TODO return Challenge object and send on websocket
-    return true;
+    const obj = {type: 'challenge', issuer: this.user.username, receiver: user.username, status: 'pending'};
+    this.lobbyService.sendChallenge(obj)
+    .subscribe((challenge: Challenge) => {
+      this.challenges.push(challenge);
+    });
   }
 
   cancelChallenge(challenge: Challenge) {

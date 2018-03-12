@@ -9,15 +9,16 @@
 <div class="list-group">
   <div *ngFor="let challenge of challenges" class="list-group-item">
     <!-- If user issued challenge, it can be canceled -->
-    <div *ngIf="challenge.issuer == username">
-      <span class="badge">{{challenge.receiver}}</span>
+    <div *ngIf="challenge.issuer == user.username">
+      <label for="accept">You have challenged {{challenge.receiver}}</label>
       <button type="button" class="btn btn-danger" (click)="cancelChallenge(challenge);">Cancel</button>
     </div>
     <!-- If user received challenge, it can be accepted/rejected -->
-    <div *ngIf="!challenge.receiver == username">
-      <span class="badge">{{challenge.issuer}}</span>
-      <button type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
-      <button type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
+    <div *ngIf="challenge.receiver == user.username">
+      <label for="accept">Accept challenge from {{challenge.issuer}}</label>
+      <button id="accept" type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
+      <label for="reject">Reject challenge from {{challenge.issuer}}</label>
+      <button id="reject" type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
     </div>
   </div>
 </div>
