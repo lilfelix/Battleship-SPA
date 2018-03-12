@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { RegisterComponent } from './register/register.component';
 import { LobbyService } from './lobby/lobby.service';
 import { ChatComponent } from './chat/chat.component';
+import { ChatService } from './chat/chat.service';
 
 const appRoutes: Routes = [
   {
@@ -58,7 +59,7 @@ const appRoutes: Routes = [
       // { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [WebsocketService, AuthService, LobbyService],
+  providers: [WebsocketService, AuthService, LobbyService, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

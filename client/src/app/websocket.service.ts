@@ -4,6 +4,7 @@ import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 import { AuthService } from './login/auth.service';
 import { User } from './models/User';
 import { LobbyService } from './lobby/lobby.service';
+import { ChatService } from './chat/chat.service';
 
 @Injectable()
 export class WebsocketService {
@@ -14,7 +15,7 @@ export class WebsocketService {
   public user: User;
 
   // The singleton WebsocketService is the last service to be injected, ensuring it can access authService.user
-  constructor(private authService: AuthService, private lobbyService: LobbyService) {
+  constructor(private authService: AuthService, private lobbyService: LobbyService, private chatService: ChatService) {
     this.user = this.authService.user;
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
 
@@ -31,10 +32,13 @@ export class WebsocketService {
         console.log('websocketservice received from server: ', object);
         switch (object.type) {
           case 'user':
-            this.lobbyService.displayNewUser(object.payload);
+            this.lobbyService.displayUser(object.payload);
             break;
           case 'challenge':
             this.lobbyService.displayChallenge(object.payload);
+            break;
+          case 'message':
+            this.chatService.displayMessage(object.payload);
             break;
           default:
             console.log('Unidentified object from websocket:');
