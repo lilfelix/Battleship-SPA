@@ -35,7 +35,7 @@ export class WebsocketService {
             this.lobbyService.displayUser(object.payload);
             break;
           case 'challenge':
-            this.lobbyService.displayChallenge(object.payload);
+            this.lobbyService.processChallenge(object.payload);
             break;
           case 'message':
             this.chatService.displayMessage(object.payload);

@@ -69,15 +69,16 @@ export function getActiveUsers() {
 
 // Send challenges to affected sockets.
 export function sendChallenges(obj: any) {
-    const receiverSckt = server.openSockets.get(obj.receiver);
-    const issuerSckt = server.openSockets.get(obj.issuer);
+    const payload = obj.payload;
+    const receiverSckt = server.openSockets.get(payload.receiver);
+    const issuerSckt = server.openSockets.get(payload.issuer);
     let receiverSent = false;
     let issuerSent = false;
 
     // If error is not defined, the send has been completed, otherwise the error
     // object will indicate what failed.
     if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
-        receiverSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
+        receiverSckt.send(JSON.stringify(obj), function ack(error) {
             if (typeof error === undefined) {
                 receiverSent = true;
             } else {
@@ -87,7 +88,7 @@ export function sendChallenges(obj: any) {
     }
     if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
         // TODO send proper format from lobby service
-        issuerSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
+        issuerSckt.send(JSON.stringify(obj), function ack(error) {
             if (typeof error === undefined) {
                 issuerSent = true;
             } else {

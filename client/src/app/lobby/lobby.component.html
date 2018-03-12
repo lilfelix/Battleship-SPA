@@ -5,7 +5,7 @@
         <h4 class="card-title">Available Players</h4>
         <div class="list-group">
           <div *ngFor="let player of players" class="list-group-item">
-            <button type="button" class="btn btn-success" (click)="challengePlayer(player);">Challenge {{player.username}}</button>
+            <button type="button" class="btn btn-success" (click)="issueChallenge(player);">Challenge {{player.username}}</button>
           </div>
         </div>
       </div>

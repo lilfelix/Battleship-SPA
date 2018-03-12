@@ -16,7 +16,7 @@ export class LobbyComponent implements OnInit {
   @Output() public user: User;
   @Output() players: User[];
   challenges: Challenge[] = [];
-  displayChallengeSubscription: Subscription;
+  processChallengeSubscription: Subscription;
   displayUserSubscription: Subscription;
 
   constructor(private lobbyService: LobbyService, private wsService: WebsocketService) { }
@@ -36,37 +36,73 @@ export class LobbyComponent implements OnInit {
     this.displayUserSubscription = this.lobbyService.displayUserSource
       .subscribe((user: User) => { this.players.push(user); });
 
-    // Subscribe to challenges from other players
-    this.displayChallengeSubscription = this.lobbyService.displayChallengeSource
+    // Subscribe to new/accepted/rejected/cancelede challenges from players
+    this.processChallengeSubscription = this.lobbyService.processChallengeSource
       .subscribe((challenge: Challenge) => {
-        console.log('pushing challenge to list: ', challenge);
-        this.challenges.push(challenge);
+        this.processChallenge(challenge);
       });
   }
 
-  challengePlayer(user: User) {
+  processChallenge(challenge: Challenge) {
+    switch (challenge.status) {
+      case 'pending':
+        this.challenges.push(challenge);
+        break;
+      case 'cancel':
+        this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
+        break;
+      case 'accept':
+        this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
+        // TODO start new game
+        break;
+      case 'reject':
+        this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
+        alert('challenge issued by: ' + challenge.issuer + ' just got rejected by: ' + challenge.receiver);
+        break;
+      default:
+        console.log('Unidentified CHALLENGE object from websocket:');
+    }
+  }
+
+  issueChallenge(user: User) {
     const alreadyChallenged = this.challenges.filter(c => (c.issuer === this.user.username && c.receiver === user.username));
     console.log('already challenged: ', alreadyChallenged);
     if (alreadyChallenged.length > 0) {
       return;
     }
-    const obj = { type: 'challenge', issuer: this.user.username, receiver: user.username, status: 'pending' };
+    const obj = { type: 'challenge', payload: { issuer: this.user.username, receiver: user.username, status: 'pending' } };
     this.lobbyService.sendChallenge(obj)
       .subscribe((result: any) => {
-        result.success ? console.log('successful challenge: ' + obj.receiver) : console.log('failed challenge: ' + obj.receiver);
+        result.success ? console.log('successful challenge: ' + obj.payload.receiver) :
+          console.log('failed challenge: ' + obj.payload.receiver);
       });
   }
 
   cancelChallenge(challenge: Challenge) {
-    return true;
+    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'cancel' } };
+    this.lobbyService.sendChallenge(obj)
+      .subscribe((result: any) => {
+        result.success ? console.log('successfully canceled challenge: ' + obj.payload.receiver) :
+          console.log('failed to cancel challenge: ' + obj.payload.receiver);
+      });
   }
 
   acceptChallenge(challenge: Challenge) {
-    return true;
+    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'accept' } };
+    this.lobbyService.sendChallenge(obj)
+      .subscribe((result: any) => {
+        result.success ? console.log('successfully accepted challenge: ' + obj.payload.receiver) :
+          console.log('failed to accept challenge: ' + obj.payload.receiver);
+      });
   }
 
   rejectChallenge(challenge: Challenge) {
-    return true;
+    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'reject' } };
+    this.lobbyService.sendChallenge(obj)
+      .subscribe((result: any) => {
+        result.success ? console.log('successfully rejected challenge: ' + obj.payload.receiver) :
+          console.log('failed to reject challenge: ' + obj.payload.receiver);
+      });
   }
 
 }
