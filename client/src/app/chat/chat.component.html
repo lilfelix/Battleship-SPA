@@ -3,16 +3,20 @@
     <h5 class="card-title">Trollbox</h5>
     <p class="card-text">Chat with other players</p>
     <ul class="list-group">
-      <li *ngFor="let msg of messages" class="list-group-item borderless">{{msg.text}}</li>
+      <li *ngFor="let msg of messages" class="list-group-item borderless">
+        <p class="font-weight-bold" style="display:inline">{{msg.sender}}: </p>{{msg.text}}
+      </li>
     </ul>
-    <form (ngSubmit)="onSubmit(message.value)" #chatForm="ngForm">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Message</span>
+    <form (ngSubmit)="onSubmit(); msgForm.resetForm()" #msgForm="ngForm">
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Message</span>
+          </div>
+          <textarea class="form-control" [(ngModel)]="message" name="message" required placeholder="Enter message" aria-label="Message"></textarea>
+          <button type="submit" class="btn pull-right btn-primary" [disabled]="!msgForm.form.valid">Send</button>
         </div>
-        <textarea #message class="form-control" aria-label="Message" requierd></textarea>
-        <button type="submit" class="btn btn-primary" [disabled]="!chatForm.form.valid">Send</button>
       </div>
-    </form> 
+    </form>
   </div>
 </div>

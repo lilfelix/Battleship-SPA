@@ -14,6 +14,7 @@ export class ChatComponent implements OnInit {
 
   @Input() user: User;
   @Input() users: User[];
+  message = '';
   messages: Message[] = [];
   displayMessageSubscription: Subscription;
 
@@ -25,12 +26,13 @@ export class ChatComponent implements OnInit {
       .subscribe((msg: Message) => { this.messages.push(msg); });
   }
 
-  onSubmit(msg: string) {
-    const chatObj = { type: 'message', payload: { sender: this.user.username, text: msg } };
+  onSubmit() {
+    const chatObj = { type: 'message', payload: { sender: this.user.username, text: this.message } };
     this.chatService.sendMsg(chatObj)
       .subscribe((response: any) => {
         response.success ? console.log('message successful!') : console.log('message failed!');
         // TODO save message to chat history
       });
+      this.message = '';
   }
 }
