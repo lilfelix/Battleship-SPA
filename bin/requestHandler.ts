@@ -78,7 +78,7 @@ export function sendChallenges(obj: any) {
     // object will indicate what failed.
     if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
         receiverSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
-            if (error !== undefined) {
+            if (typeof error === undefined) {
                 receiverSent = true;
             } else {
                 console.log(error);
@@ -87,7 +87,7 @@ export function sendChallenges(obj: any) {
     }
     if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
         issuerSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
-            if (error !== undefined) {
+            if (typeof error === undefined) {
                 issuerSent = true;
             } else {
                 console.log(error);

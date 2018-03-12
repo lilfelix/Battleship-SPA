@@ -45,6 +45,11 @@ export class LobbyComponent implements OnInit {
   }
 
   challengePlayer(user: User) {
+    const alreadyChallenged = this.challenges.filter(c => (c.issuer === this.user.username && c.receiver === user.username));
+    console.log('already challenged: ', alreadyChallenged);
+    if (alreadyChallenged.length > 0) {
+      return;
+    }
     const obj = { type: 'challenge', issuer: this.user.username, receiver: user.username, status: 'pending' };
     this.lobbyService.sendChallenge(obj)
       .subscribe((result: any) => {
