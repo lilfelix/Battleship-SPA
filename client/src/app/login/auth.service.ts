@@ -15,7 +15,10 @@ export class AuthService {
   public user: User;
   @Output() setUserSource = new Subject<User>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.user = new User();
+    this.user.username = 'Guest';
+  }
 
   // Authenticate existing or newly registered user (type property in autObj differs)
   authUser(authObj: any): Observable<AuthResponse> {

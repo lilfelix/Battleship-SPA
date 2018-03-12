@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from './login.service';
+import { AuthService } from './auth.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
 import { Router } from '@angular/router';

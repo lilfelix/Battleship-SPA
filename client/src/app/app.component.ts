@@ -17,7 +17,10 @@ export class AppComponent implements OnInit {
   setUserSubscription: Subscription;
   // private wsService: WebsocketService;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    this.user = new User();
+    this.user.username = 'Guest';
+  }
 
   ngOnInit() {
     this.setUserSubscription = this.authService.setUserSource
