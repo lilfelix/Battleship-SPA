@@ -54,7 +54,7 @@ export class Server {
    */
   constructor() {
     this.openSockets = new Map();
-    
+
     //create expressjs application
     this.app = express();
     this.app.set('port', '3000');

@@ -53,16 +53,48 @@ export function createUser(body: any) {
 
 // Active users are those who have a websocket connection open
 export function getActiveUsers() {
-    const names: string[]  = Array.from(server.openSockets.keys());
+    const names: string[] = Array.from(server.openSockets.keys());
     console.log('keys from sockets', names);
     // const repository = getRepository(User);
     // const users = await repository.find({
-        // select: ["id", "name", "username"],
+    // select: ["id", "name", "username"],
     //     // relations: ["highscore", "games", "boards", "receivedMsgs", "sentMsgs"],
     // });
     const users: any[] = [];
     names.forEach(n => {
-       users.push({username: n}); 
+        users.push({ username: n });
     });
     return users;
+}
+
+// Send challenges to affected sockets.
+export function sendChallenges(obj: any) {
+    const receiverSckt = server.openSockets.get(obj.receiver);
+    const issuerSckt = server.openSockets.get(obj.issuer);
+    let receiverSent = false;
+    let issuerSent = false;
+
+    // If error is not defined, the send has been completed, otherwise the error
+    // object will indicate what failed.
+    if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+        receiverSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
+            if (error !== undefined) {
+                receiverSent = true;
+            } else {
+                console.log(error);
+            }
+        });
+    }
+    if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
+        issuerSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
+            if (error !== undefined) {
+                issuerSent = true;
+            } else {
+                console.log(error);
+            }
+        });
+    }
+    if (receiverSent && issuerSent)
+        return true;
+    return false;
 }

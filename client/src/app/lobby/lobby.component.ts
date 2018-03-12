@@ -34,19 +34,22 @@ export class LobbyComponent implements OnInit {
 
     // Subscribe to viewing new users that come online
     this.displayNewUserSubscription = this.lobbyService.displayUserSource
-      .subscribe((user: User) => { this.players.push(user);  });
+      .subscribe((user: User) => { this.players.push(user); });
 
     // Subscribe to challenges from other players
     this.displayChallengeSubscription = this.lobbyService.displayChallengeSource
-      .subscribe((challenge: Challenge) => { this.challenges.push(challenge); });
+      .subscribe((challenge: Challenge) => {
+        console.log('pushing challenge to list: ', challenge);
+        this.challenges.push(challenge);
+      });
   }
 
   challengePlayer(user: User) {
-    const obj = {type: 'challenge', issuer: this.user.username, receiver: user.username, status: 'pending'};
+    const obj = { type: 'challenge', issuer: this.user.username, receiver: user.username, status: 'pending' };
     this.lobbyService.sendChallenge(obj)
-    .subscribe((challenge: Challenge) => {
-      this.challenges.push(challenge);
-    });
+      .subscribe((result: any) => {
+        result.success ? console.log('successful challenge: ' + obj.receiver) : console.log('failed challenge: ' + obj.receiver);
+      });
   }
 
   cancelChallenge(challenge: Challenge) {

@@ -17,7 +17,6 @@ export class WebsocketService {
   constructor(private authService: AuthService, private lobbyService: LobbyService) {
     this.user = this.authService.user;
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
-    // console.log('wsService OnInit username: ' + this.user.username);
 
     /**
      * A socket object has format {type:..., payload:...}
@@ -30,10 +29,12 @@ export class WebsocketService {
       (object) => {
         this.serverData.push(object);
         console.log('websocketservice received from server: ', object);
-        console.dir(object);
         switch (object.type) {
           case 'user':
             this.lobbyService.displayNewUser(object.payload);
+            break;
+          case 'challenge':
+            this.lobbyService.displayChallenge(object.payload);
             break;
           default:
             console.log('Unidentified object from websocket:');

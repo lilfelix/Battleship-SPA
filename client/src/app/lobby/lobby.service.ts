@@ -40,9 +40,9 @@ export class LobbyService {
 
   // Send challenge to server so it can be forwarded to receiver
   sendChallenge(challenge: Challenge) {
-    return this.http.post<Challenge>(this.challengeURL, JSON.stringify(challenge), this.options)
+    return this.http.post<any>(this.challengeURL, JSON.stringify(challenge), this.options)
     .pipe(
-      catchError(handleError('sendChallenge', {}))
+      catchError(handleError('sendChallenge', {success: false}))
     );
   }
 

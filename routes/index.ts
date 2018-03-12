@@ -39,7 +39,7 @@ router.post('/auth', async function (req, res, next) {
     const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
     res.json(result);
-    server.broadcast({type:'user', payload: {username: req.body.username}});
+    server.broadcast({ type: 'user', payload: { username: req.body.username } });
     // updateActiveUsers(result.payload);
 });
 
@@ -66,6 +66,12 @@ router.get('/active', function (req, res) {
         console.log('Sending active users: ', users);
         res.json(users);
     }
+});
+
+// Process challenge
+router.post('/challenge', function (req, res) {
+    const success = handler.sendChallenges(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
 });
 
 function emptyResponse(res: express.Response, msg: string) {
