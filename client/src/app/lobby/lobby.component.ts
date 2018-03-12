@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { LobbyService } from './lobby.service';
@@ -13,8 +13,8 @@ import { WebsocketService } from '../websocket.service';
 })
 export class LobbyComponent implements OnInit {
 
-  user: User;
-  players: User[];
+  @Output() public user: User;
+  @Output() players: User[];
   challenges: Challenge[] = [];
   displayChallengeSubscription: Subscription;
   displayNewUserSubscription: Subscription;

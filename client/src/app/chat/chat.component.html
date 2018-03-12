@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Trollbox</h5>
+    <p class="card-text">Chat with other players</p>
+    <ul class="list-group">
+      <li *ngFor="let msg of messages" class="list-group-item borderless">{{msg.text}}</li>
+    </ul>
+    <form (ngSubmit)="onSubmit(message.value)" #chatForm="ngForm">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Message</span>
+        </div>
+        <textarea #message class="form-control" aria-label="Message" requierd></textarea>
+        <button type="submit" class="btn btn-primary" [disabled]="!chatForm.form.valid">Send</button>
+      </div>
+    </form> 
+  </div>
+</div>
