@@ -1,9 +1,9 @@
 import { User } from './User';
 
 export class Message {
-    id: number;
-    sender: User;
-    recipient: User; // Undefined if sent to all?
+    id?: number;
+    sender: string; // username
+    recipient?: User;
     text: string;
-    timestamp: string;
+    timestamp?: string;
 }

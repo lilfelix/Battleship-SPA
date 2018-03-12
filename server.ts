@@ -15,6 +15,7 @@ import * as http from 'http';
 import { ServerOptions } from 'https';
 import { User } from './entity/User';
 import { createConnection, Connection, getConnection, getRepository } from "typeorm";
+import { NextFunction } from 'express-serve-static-core';
 
 interface Error {
   status?: number;
@@ -104,21 +105,41 @@ export class Server {
 
     // Error handling
     this.app.use(errorHandler());
+
+    // catch 404 and forward to error handler
+    this.app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
+      const err: Error = new Error('Not Found');
+      err.status = 404;
+      next(err);
+    });
+
+    // error handler
+    this.app.use(function (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
+      // set locals, only providing error in development
+      res.locals.message = err.message;
+      res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+      // set error status
+      res.status(err.status || 500);
+    });
   }
 
   // Broadcast to all.
   public broadcast(obj: any) {
+    let success;
     this.wss.clients.forEach(function each(client: any) {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(obj), function ack(error: any) {
-          if (typeof error === undefined) {
-            return true;
+          if (error == undefined) {
+            console.log('success in server.broadcast: ', obj);
+            success = true;
           } else {
-            console.log(error);
-            return false;
+            console.log('failed in server.broadcast: ', [obj, error]);
+            success = false;
           }
         });
       }
     });
+    return success; // Only last msg indicates success/failure
   }
 }

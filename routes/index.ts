@@ -76,6 +76,7 @@ router.post('/challenge', function (req, res) {
 
 router.post('/message', function(req, res) {
     const success = server.broadcast(req.body);
+    console.log('success in router is', success);
     success ? res.json({ success: true }) : res.json({ success: false });
     // TODO save msg to chat history table in db
 });

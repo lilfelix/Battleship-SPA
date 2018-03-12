@@ -8,7 +8,7 @@ import { Message } from '../models/Message';
 @Injectable()
 export class ChatService {
 
-  private msgURL: 'message';
+  private messageURL = 'message';
   @Output() displayMessageSource = new Subject<Message>();
   private options = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,7 +17,7 @@ export class ChatService {
   constructor(private http: HttpClient) { }
 
   sendMsg(chatObj: any) {
-    return this.http.post<any>(this.msgURL, JSON.stringify(chatObj), this.options)
+    return this.http.post<any>(this.messageURL, JSON.stringify(chatObj), this.options)
     .pipe(
       catchError(handleError('sendMsg', {success: false}))
     );
