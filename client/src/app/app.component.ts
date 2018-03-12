@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
-import { AuthService } from './login/login.service';
+import { AuthService } from './login/auth.service';
 import { WebsocketService } from './websocket.service';
 import { Router, ActivatedRoute } from '@angular/router';
 

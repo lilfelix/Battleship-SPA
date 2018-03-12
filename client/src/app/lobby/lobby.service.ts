@@ -7,7 +7,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { handleError } from '../httpError';
 import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
-import { AuthService } from '../login/login.service';
+import { AuthService } from '../login/auth.service';
 
 @Injectable()
 export class LobbyService {

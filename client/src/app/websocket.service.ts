@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
-import { AuthService } from './login/login.service';
+import { AuthService } from './login/auth.service';
 import { User } from './models/User';
 import { LobbyService } from './lobby/lobby.service';
 

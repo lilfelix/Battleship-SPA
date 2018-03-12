@@ -3,7 +3,7 @@ import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { LobbyService } from './lobby.service';
 import { Subscription } from 'rxjs/Subscription';
-import { AuthService } from '../login/login.service';
+import { AuthService } from '../login/auth.service';
 import { WebsocketService } from '../websocket.service';
 
 @Component({

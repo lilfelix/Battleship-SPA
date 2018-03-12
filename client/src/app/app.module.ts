@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { WebsocketService } from './websocket.service';
-import { AuthService } from './login/login.service';
+import { AuthService } from './login/auth.service';
 import { LobbyComponent } from './lobby/lobby.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { RegisterComponent } from './register/register.component';
