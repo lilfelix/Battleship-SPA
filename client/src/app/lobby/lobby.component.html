@@ -1,24 +1,37 @@
-<h4>Available Players</h4>
-<div class="list-group">
-  <div *ngFor="let player of players" class="list-group-item">
-    <button type="button" class="btn btn-success" (click)="challengePlayer(player);">Challenge {{player.username}}</button>
-  </div>
-</div>
-
-<h4>Pending Challenges</h4>
-<div class="list-group">
-  <div *ngFor="let challenge of challenges" class="list-group-item">
-    <!-- If user issued challenge, it can be canceled -->
-    <div *ngIf="challenge.issuer == user.username">
-      <label for="accept">You have challenged {{challenge.receiver}}</label>
-      <button type="button" class="btn btn-danger" (click)="cancelChallenge(challenge);">Cancel</button>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Available Players</h4>
+        <div class="list-group">
+          <div *ngFor="let player of players" class="list-group-item">
+            <button type="button" class="btn btn-success" (click)="challengePlayer(player);">Challenge {{player.username}}</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- If user received challenge, it can be accepted/rejected -->
-    <div *ngIf="challenge.receiver == user.username">
-      <label for="accept">Accept challenge from {{challenge.issuer}}</label>
-      <button id="accept" type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
-      <label for="reject">Reject challenge from {{challenge.issuer}}</label>
-      <button id="reject" type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
+  </div>
+
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Pending Challenges</h4>
+        <div class="list-group">
+          <div *ngFor="let challenge of challenges" class="list-group-item">
+            <!-- If user issued challenge, it can be canceled -->
+            <div *ngIf="challenge.issuer == user.username">
+              <label for="accept">You have challenged {{challenge.receiver}}</label>
+              <button type="button" class="btn btn-danger" (click)="cancelChallenge(challenge);">Cancel</button>
+            </div>
+            <!-- If user received challenge, it can be accepted/rejected -->
+            <div *ngIf="challenge.receiver == user.username">
+              <label for="accept">{{challenge.issuer}} challenged you to a game!</label>
+              <button id="accept" type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
+              <button id="reject" type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

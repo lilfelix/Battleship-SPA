@@ -100,6 +100,8 @@ export class Server {
     // Api routes
     this.app.use('/', router);
 
+    this.app.use('/*', express.static(path.join(__dirname, "client/dist/")));
+
     // Error handling
     this.app.use(errorHandler());
   }
