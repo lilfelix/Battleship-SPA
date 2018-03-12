@@ -110,7 +110,14 @@ export class Server {
   public broadcast(obj: any) {
     this.wss.clients.forEach(function each(client: any) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(obj));
+        client.send(JSON.stringify(obj), function ack(error: any) {
+          if (typeof error === undefined) {
+            return true;
+          } else {
+            console.log(error);
+            return false;
+          }
+        });
       }
     });
   }

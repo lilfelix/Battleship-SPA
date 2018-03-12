@@ -86,6 +86,7 @@ export function sendChallenges(obj: any) {
         });
     }
     if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
+        // TODO send proper format from lobby service
         issuerSckt.send(JSON.stringify({type: 'challenge', payload:obj}), function ack(error) {
             if (typeof error === undefined) {
                 issuerSent = true;

@@ -74,6 +74,12 @@ router.post('/challenge', function (req, res) {
     success ? res.json({ success: true }) : res.json({ success: false });
 });
 
+router.post('/message', function(req, res) {
+    const success = server.broadcast(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
+    // TODO save msg to chat history table in db
+});
+
 function emptyResponse(res: express.Response, msg: string) {
     console.log(msg);
     res.json({});
