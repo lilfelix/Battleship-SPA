@@ -47,7 +47,7 @@ export class LobbyService {
   }
 
   // New user logged in. Update list in lobby
-  displayNewUser(user: User) {
+  displayUser(user: User) {
     this.displayUserSource.next(user);
   }
 }

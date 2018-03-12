@@ -17,7 +17,7 @@ export class LobbyComponent implements OnInit {
   @Output() players: User[];
   challenges: Challenge[] = [];
   displayChallengeSubscription: Subscription;
-  displayNewUserSubscription: Subscription;
+  displayUserSubscription: Subscription;
 
   constructor(private lobbyService: LobbyService, private wsService: WebsocketService) { }
 
@@ -33,7 +33,7 @@ export class LobbyComponent implements OnInit {
       });
 
     // Subscribe to viewing new users that come online
-    this.displayNewUserSubscription = this.lobbyService.displayUserSource
+    this.displayUserSubscription = this.lobbyService.displayUserSource
       .subscribe((user: User) => { this.players.push(user); });
 
     // Subscribe to challenges from other players
