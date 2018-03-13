@@ -16,36 +16,7 @@ import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat/chat.service';
 import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
-
-const appRoutes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
-  {
-    path: 'lobby',
-    component: LobbyComponent,
-    data: { title: 'Lobby' }
-  },
-  {
-    path: 'game',
-    component: GameComponent,
-  },
-  {
-    path: '',
-    redirectTo: '/login',
-    pathMatch: 'full'
-  },
-  {
-    path: '**',
-    component: PageNotFoundComponent
-  }
-];
-
+import { AppRoutingModule } from './routing.module';
 
 @NgModule({
   declarations: [
@@ -62,10 +33,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot(
-      appRoutes,
-      // { enableTracing: true } // <-- debugging purposes only
-    )
+    AppRoutingModule,
   ],
   providers: [WebsocketService, AuthService, LobbyService, ChatService],
   bootstrap: [AppComponent]

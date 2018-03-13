@@ -3,7 +3,13 @@ import { Highscore } from '../../models/Highscore';
 import { Game } from '../../models/Game';
 import { Message } from '../../models/Message';
 import { Tile } from '../../models/Tile';
+import { Component } from '@angular/core';
 
+@Component({
+  selector: 'app-board',
+  templateUrl: './board.component.html',
+  styleUrls: ['./board.component.css']
+})
 export class BoardComponent {
 
   tiles: Tile[][];

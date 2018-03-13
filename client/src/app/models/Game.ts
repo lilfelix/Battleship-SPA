@@ -1,5 +1,5 @@
 import { User } from './User';
-import { Board } from './Board';
+import { BoardComponent } from '../game/board/board.component';
 export class Game {
 
     id: number;
@@ -7,6 +7,6 @@ export class Game {
     player1Score: number;
     player2Score: number;
     finished: boolean;
-    boards: Board[];
+    boards: BoardComponent[];
 
 }

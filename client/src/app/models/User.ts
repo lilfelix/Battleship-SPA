@@ -1,5 +1,5 @@
 import { Game } from './Game';
-import { Board } from './Board';
+import { BoardComponent } from '../game/board/board.component';
 import { Highscore } from './Highscore';
 import { Message } from './Message';
 
@@ -9,7 +9,7 @@ export class User {
     name?: string;
     highscore?: Highscore;
     games?: Game[];
-    boards?: Board[];
+    boards?: BoardComponent[];
     receivedMsgs?: Message[];
     sentMsgs?: Message[];
 }
