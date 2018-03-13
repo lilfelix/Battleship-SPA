@@ -70,24 +70,26 @@ router.get('/active', function (req, res) {
 
 // Process challenge
 router.post('/challenge', function (req, res) {
-    const success = handler.sendChallenges(req.body);
-    success ? res.json({ success: true }) : res.json({ success: false });
+    handler.sendChallenges(req.body);
+    // success ? res.json({ success: true }) : res.json({ success: false });
+    res.json({ success: true }); 
 });
 
-router.post('/message', function(req, res) {
-    const success = server.broadcast(req.body);
-    console.log('success in router is', success);
-    success ? res.json({ success: true }) : res.json({ success: false });
+router.post('/message', function (req, res) {
+    server.broadcast(req.body);
+    // console.log('success in router is', success);
+    // success ? res.json({ success: true }) : res.json({ success: false });
     // TODO save msg to chat history table in db
+    res.json({ success: true }); 
+});
+
+router.post('/ready', function (req, res) {
+    handler.sendReadyState(req.body);
+    // success ? res.json({ success: true }) : res.json({ success: false });
+    res.json({ success: true }); 
 });
 
 function emptyResponse(res: express.Response, msg: string) {
     console.log(msg);
     res.json({});
 }
-
-// function updateActiveUsers(user: User) {
-//     server.activeUsers.push(user);
-//     console.log('Currently active users:');
-//     console.dir(server.activeUsers);
-// }

@@ -19,6 +19,7 @@ export class BoardComponent implements OnInit {
   @Input() myTurn = false; // Indicates if it's the client's turn to shoot
   @Input() players: User[]; // players[0] is always the client
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
+  waiting = false; // Indicates if player is waiting for opponent during gameplay
 
   constructor(private gameService: GameService) { }
 
@@ -39,6 +40,13 @@ export class BoardComponent implements OnInit {
 
   freezeBoard() {
     this.boards[0].frozen = true;
-    this.gameService.sendReadyState(this.boards[0], this.players);
+    this.gameService.sendReadyState(this.boards[0], this.players)
+    .subscribe((result) => {
+      result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
+      if (result.success) {
+        this.waiting = true;
+      }
+    });
+
   }
 }

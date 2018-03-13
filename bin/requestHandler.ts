@@ -72,31 +72,38 @@ export function sendChallenges(obj: any) {
     const payload = obj.payload;
     const receiverSckt = server.openSockets.get(payload.receiver);
     const issuerSckt = server.openSockets.get(payload.issuer);
-    let receiverSent = false;
-    let issuerSent = false;
 
     // If error is not defined, the send has been completed, otherwise the error
     // object will indicate what failed.
     if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
         receiverSckt.send(JSON.stringify(obj), function ack(error) {
-            if (typeof error === undefined) {
-                receiverSent = true;
-            } else {
-                console.log(error);
+            if (error != null) {
+                console.log(error)
             }
         });
     }
     if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
-        // TODO send proper format from lobby service
         issuerSckt.send(JSON.stringify(obj), function ack(error) {
-            if (typeof error === undefined) {
-                issuerSent = true;
-            } else {
-                console.log(error);
+            if (error != null) {
+                console.log(error)
             }
         });
     }
-    if (receiverSent && issuerSent)
-        return true;
-    return false;
+}
+
+/** 
+ * obj = {
+ * type: 'game',
+ * payload: {board: board, from: players[0], to: players[1], status: 'shipsPlaced'}
+ * };
+ */
+export function sendReadyState(obj: any) {
+    const receiverSckt = server.openSockets.get(obj.payload.to.username);
+    if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+        receiverSckt.send(JSON.stringify(obj), function ack(error) {
+            if (error != null) {
+                console.log(error)
+            }
+        });
+    }
 }
