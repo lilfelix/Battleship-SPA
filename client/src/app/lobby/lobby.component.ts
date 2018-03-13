@@ -5,6 +5,7 @@ import { LobbyService } from './lobby.service';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../login/auth.service';
 import { WebsocketService } from '../websocket.service';
+import { HttpService } from '../http.service';
 
 @Component({
   selector: 'app-lobby',
@@ -19,7 +20,7 @@ export class LobbyComponent implements OnInit {
   processChallengeSubscription: Subscription;
   displayUserSubscription: Subscription;
 
-  constructor(private lobbyService: LobbyService, private wsService: WebsocketService) { }
+  constructor(private http: HttpService, private lobbyService: LobbyService, private wsService: WebsocketService) { }
 
   ngOnInit() {
 
@@ -73,38 +74,10 @@ export class LobbyComponent implements OnInit {
       return;
     }
     const obj = { type: 'challenge', payload: { issuer: this.user.username, receiver: user.username, status: 'pending' } };
-    this.lobbyService.sendChallenge(obj)
-      .subscribe((result: any) => {
-        result.success ? console.log('successful challenge: ' + obj.payload.receiver) :
-          console.log('failed challenge: ' + obj.payload.receiver);
-      });
+    this.lobbyService.sendChallenge(obj.payload, 'pending', 'successfully issued challenge: ', 'failed to issue challenge: ');
   }
 
-  cancelChallenge(challenge: Challenge) {
-    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'cancel' } };
-    this.lobbyService.sendChallenge(obj)
-      .subscribe((result: any) => {
-        result.success ? console.log('successfully canceled challenge: ' + obj.payload.receiver) :
-          console.log('failed to cancel challenge: ' + obj.payload.receiver);
-      });
+  updateChallenge(challenge, status) {
+    this.lobbyService.sendChallenge(challenge, status, `successfully ${status}ed challenge: `, `failed to ${status} challenge: `);
   }
-
-  acceptChallenge(challenge: Challenge) {
-    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'accept' } };
-    this.lobbyService.sendChallenge(obj)
-      .subscribe((result: any) => {
-        result.success ? console.log('successfully accepted challenge: ' + obj.payload.receiver) :
-          console.log('failed to accept challenge: ' + obj.payload.receiver);
-      });
-  }
-
-  rejectChallenge(challenge: Challenge) {
-    const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: 'reject' } };
-    this.lobbyService.sendChallenge(obj)
-      .subscribe((result: any) => {
-        result.success ? console.log('successfully rejected challenge: ' + obj.payload.receiver) :
-          console.log('failed to reject challenge: ' + obj.payload.receiver);
-      });
-  }
-
 }

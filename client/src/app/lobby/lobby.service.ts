@@ -9,6 +9,7 @@ import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { AuthService } from '../login/auth.service';
 import { Router } from '@angular/router';
+import { HttpService } from '../http.service';
 
 @Injectable()
 export class LobbyService {
@@ -19,11 +20,8 @@ export class LobbyService {
   public opponent: User;
   @Output() processChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
-  private options = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
 
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {
+  constructor(private http: HttpService, private authService: AuthService, private router: Router) {
     this.user = authService.user;
     this.opponent = new User();
     this.opponent.username = 'None';
@@ -31,10 +29,7 @@ export class LobbyService {
 
   // GET available players from server
   getActiveUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.activeUsersURL)
-      .pipe(
-        catchError(handleError('getActiveUsers', []))
-      );
+    return this.http.get(this.activeUsersURL, 'getActiveUsers');
   }
 
   // New challenge received on websocket. Display to user
@@ -43,11 +38,12 @@ export class LobbyService {
   }
 
   // Send challenge to server so it can be forwarded to receiver
-  sendChallenge(challengeObj: any) {
-    return this.http.post<any>(this.challengeURL, JSON.stringify(challengeObj), this.options)
-      .pipe(
-        catchError(handleError('sendChallenge', { success: false }))
-      );
+ sendChallenge(challenge: Challenge, status: string, successMsg: string, errMsg: string) {
+  const obj = { type: 'challenge', payload: { issuer: challenge.issuer, receiver: challenge.receiver, status: status } };
+    this.http.post(this.challengeURL, obj, 'sendChallenge')
+    .subscribe((result) => {
+      result.success ? console.log(successMsg + challenge.receiver) : console.log(errMsg + challenge.receiver);
+    });
   }
 
   // New user logged in. Update list in lobby

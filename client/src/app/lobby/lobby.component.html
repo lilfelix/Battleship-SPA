@@ -21,13 +21,13 @@
             <!-- If user issued challenge, it can be canceled -->
             <div *ngIf="challenge.issuer == user.username">
               <label for="accept">You have challenged {{challenge.receiver}}</label>
-              <button type="button" class="btn btn-danger" (click)="cancelChallenge(challenge);">Cancel</button>
+              <button type="button" class="btn btn-danger" (click)="updateChallenge(challenge, 'cancel');">Cancel</button>
             </div>
             <!-- If user received challenge, it can be accepted/rejected -->
             <div *ngIf="challenge.receiver == user.username">
               <label for="accept">{{challenge.issuer}} challenged you to a game!</label>
-              <button id="accept" type="button" class="btn btn-success" (click)="acceptChallenge(challenge);">Accept</button>
-              <button id="reject" type="button" class="btn btn-danger" (click)="rejectChallenge(challenge);">Reject</button>
+              <button id="accept" type="button" class="btn btn-success" (click)="updateChallenge(challenge, 'accept');">Accept</button>
+              <button id="reject" type="button" class="btn btn-danger" (click)="updateChallenge(challenge, 'reject');">Reject</button>
             </div>
           </div>
         </div>
