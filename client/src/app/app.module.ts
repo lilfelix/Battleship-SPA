@@ -14,6 +14,8 @@ import { RegisterComponent } from './register/register.component';
 import { LobbyService } from './lobby/lobby.service';
 import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat/chat.service';
+import { GameComponent } from './game/game.component';
+import { BoardComponent } from './game/board/board.component';
 
 const appRoutes: Routes = [
   {
@@ -28,6 +30,10 @@ const appRoutes: Routes = [
     path: 'lobby',
     component: LobbyComponent,
     data: { title: 'Lobby' }
+  },
+  {
+    path: 'game',
+    component: GameComponent,
   },
   {
     path: '',
@@ -48,7 +54,9 @@ const appRoutes: Routes = [
     LobbyComponent,
     PageNotFoundComponent,
     RegisterComponent,
-    ChatComponent
+    ChatComponent,
+    GameComponent,
+    BoardComponent
   ],
   imports: [
     BrowserModule,
