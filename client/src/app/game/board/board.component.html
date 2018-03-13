@@ -1,0 +1,4 @@
+<div class="container" [ngStyle]="boardStyles">
+  <div *ngFor="let row of board.tiles; let j = index"></div>
+  <div *ngFor="let tile of row; let k = index" [ngStyle]="tileStyles"></div>
+</div>
