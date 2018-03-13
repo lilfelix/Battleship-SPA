@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BoardComponent } from './board/board.component';
 import { User } from '../models/User';
+import { LobbyService } from '../lobby/lobby.service';
 
 @Component({
   selector: 'app-game',
@@ -10,19 +11,18 @@ import { User } from '../models/User';
 export class GameComponent implements OnInit {
 
   id: number;
-  users: User[];
+  players: User[];
   player1Score: number;
   player2Score: number;
   finished: boolean;
   boards: BoardComponent[] = [];
 
-  constructor(users: User[]) {
-    for (let i = 0; i < 2; i++) {
-      this.boards[i] = new BoardComponent(i, 3, users[i], false);
-    }
-  }
+  constructor(private lobbyService: LobbyService) {}
 
   ngOnInit() {
+    this.players = this.lobbyService.getPlayers();
+    for (let i = 0; i < 2; i++) {
+      this.boards[i] = new BoardComponent(i, 3, this.players[i], false);
+    }
   }
-
 }

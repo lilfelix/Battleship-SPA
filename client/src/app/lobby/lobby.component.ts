@@ -53,7 +53,9 @@ export class LobbyComponent implements OnInit {
         break;
       case 'accept':
         this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
-        // TODO start new game
+        const opponent = new User();
+        opponent.username = challenge.issuer === this.user.username ? challenge.receiver : challenge.issuer;
+        this.lobbyService.initGame(this.user, opponent);
         break;
       case 'reject':
         this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);

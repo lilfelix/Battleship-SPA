@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
 })
 export class BoardComponent {
 
-  tiles: Tile[][];
+  tiles: Tile[][] = [];
   boardStyles: any = {};
 
   constructor(public id: number, public size: number, public owner: User, public frozen: boolean) {

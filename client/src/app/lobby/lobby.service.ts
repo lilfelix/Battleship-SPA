@@ -8,6 +8,7 @@ import { handleError } from '../httpError';
 import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { AuthService } from '../login/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class LobbyService {
@@ -15,14 +16,17 @@ export class LobbyService {
   private activeUsersURL = 'active';
   private challengeURL = 'challenge';
   public user: User;
+  public opponent: User;
   @Output() processChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
   private options = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {
     this.user = authService.user;
+    this.opponent = new User();
+    this.opponent.username = 'None';
   }
 
   // GET available players from server
@@ -49,5 +53,14 @@ export class LobbyService {
   // New user logged in. Update list in lobby
   displayUser(user: User) {
     this.displayUserSource.next(user);
+  }
+
+  initGame(user: User, opponent: User) {
+    this.opponent = opponent;
+    this.router.navigate(['game']);
+  }
+  // Returns the users participating in a game that is being initialized
+  getPlayers() {
+    return [this.user, this.opponent];
   }
 }
