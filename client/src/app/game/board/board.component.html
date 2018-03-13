@@ -2,8 +2,9 @@
   <div class="col-sm-6" *ngFor="let board of boards" [ngStyle]="board.boardStyles">
     <ng-template ngFor let-row [ngForOf]="board.tiles" let-j="index">
       <ng-template ngFor let-tile [ngForOf]="row" let-k="index">
-        <div [ngStyle]="tile.tileStyles"> </div>
+        <div [ngStyle]="tile.tileStyles" (click)="clickEvent(tile, board)"> </div>
       </ng-template>
     </ng-template>
   </div>
 </div>
+<button type="button" class="btn btn-primary pull-right" [disabled]="boards[0].numPlacedShips !== boards[0].totalNumShips" (click)="freezeBoard()">Continue</button>

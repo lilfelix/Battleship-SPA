@@ -17,6 +17,8 @@ import { ChatService } from './chat/chat.service';
 import { AppRoutingModule } from './routing.module';
 import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
+import { HttpService } from './http.service';
+import { GameService } from './game/game.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,13 @@ import { BoardComponent } from './game/board/board.component';
     HttpClientModule,
     AppRoutingModule,
   ],
-  providers: [WebsocketService, AuthService, LobbyService, ChatService],
+  providers: [
+    WebsocketService,
+    HttpService,
+    AuthService,
+    LobbyService,
+    ChatService,
+    GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

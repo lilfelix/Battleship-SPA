@@ -5,6 +5,8 @@ export class Board {
 
     tiles: Tile [][] = [];
     boardStyles: any = {};
+    totalNumShips: number;
+    numPlacedShips = 0;
 
     constructor(public id: number, public size: number, public owner: User, public frozen: boolean) {
         // Generate tiles for board
@@ -15,14 +17,25 @@ export class Board {
             }
         }
         this.setBoardStyles(true);
+        this.totalNumShips = 3;
     }
 
     setBoardStyles(focus: boolean) {
         this.boardStyles = {
-            'display' : 'grid',
+            'display': 'grid',
             'grid-template-columns': `${this.size}`,
             'grid-template-rows': `${this.size}`,
             'opacity': focus ? '1' : '0.5'
         };
+    }
+
+    placeShip(tile: Tile) {
+        if (tile.used) {
+            this.numPlacedShips--;
+            tile.setTileStyles(false, false);
+        } else {
+            this.numPlacedShips++;
+            tile.setTileStyles(true, false);
+        }
     }
 }
