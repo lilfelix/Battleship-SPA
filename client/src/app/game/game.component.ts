@@ -12,17 +12,12 @@ export class GameComponent implements OnInit {
 
   id: number;
   players: User[];
-  player1Score: number;
-  player2Score: number;
+  size = 3;
   finished: boolean;
-  boards: BoardComponent[] = [];
 
   constructor(private lobbyService: LobbyService) {}
 
   ngOnInit() {
     this.players = this.lobbyService.getPlayers();
-    for (let i = 0; i < 2; i++) {
-      this.boards[i] = new BoardComponent(i, 3, this.players[i], false);
-    }
   }
 }

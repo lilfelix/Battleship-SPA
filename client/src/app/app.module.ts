@@ -14,9 +14,9 @@ import { RegisterComponent } from './register/register.component';
 import { LobbyService } from './lobby/lobby.service';
 import { ChatComponent } from './chat/chat.component';
 import { ChatService } from './chat/chat.service';
+import { AppRoutingModule } from './routing.module';
 import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
-import { AppRoutingModule } from './routing.module';
 
 @NgModule({
   declarations: [

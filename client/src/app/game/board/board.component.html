@@ -1,4 +1,9 @@
-<div class="container" [ngStyle]="boardStyles">
-  <div *ngFor="let row of board.tiles; let j = index"></div>
-  <div *ngFor="let tile of row; let k = index" [ngStyle]="tileStyles"></div>
+<div class="row">
+  <div class="col-sm-6" *ngFor="let board of boards" [ngStyle]="board.boardStyles">
+    <ng-template ngFor let-row [ngForOf]="board.tiles" let-j="index">
+      <ng-template ngFor let-tile [ngForOf]="row" let-k="index">
+        <div [ngStyle]="tile.tileStyles"> </div>
+      </ng-template>
+    </ng-template>
+  </div>
 </div>

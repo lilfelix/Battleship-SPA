@@ -2,35 +2,27 @@ import { User } from '../../models/User';
 import { Highscore } from '../../models/Highscore';
 import { Game } from '../../models/Game';
 import { Message } from '../../models/Message';
+import { Board } from '../../models/Board';
 import { Tile } from '../../models/Tile';
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
-  styleUrls: ['./board.component.css']
+  styleUrls: ['./board.component.css'],
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
 
-  tiles: Tile[][] = [];
-  boardStyles: any = {};
+  @Input() players: User[];
+  @Input() size: number;
+  boards: Board[] = [];
 
-  constructor(public id: number, public size: number, public owner: User, public frozen: boolean) {
-    // Generate tiles for board
-    for (let i = 0; i < size; i++) {
-      this.tiles[i] = [];
-      for (let j = 0; j < size; j++) {
-        this.tiles[i][j] = new Tile(false, false, i + 1, j + 1);
-      }
-    }
-    this.setBoardStyles(true);
-  }
+  constructor() {}
 
-  setBoardStyles(focus: boolean) {
-    this.boardStyles = {
-      'grid-template-columns': `${this.size}`,
-      'grid-template-rows': `${this.size}`,
-      'opacity': focus ? '1' : '0.5'
-    };
+  ngOnInit() {
+    this.boards.push(new Board(1, this.size, this.players[0], false));
+    this.boards.push(new Board(2, this.size, this.players[1], false));
+    console.log('BOARDS', this.boards);
   }
 }
