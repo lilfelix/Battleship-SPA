@@ -56,7 +56,7 @@ export class LobbyComponent implements OnInit {
         this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
         const opponent = new User();
         opponent.username = challenge.issuer === this.user.username ? challenge.receiver : challenge.issuer;
-        this.lobbyService.initGame(this.user, opponent);
+        this.lobbyService.initGame(this.user, opponent, true);
         break;
       case 'reject':
         this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
@@ -74,10 +74,10 @@ export class LobbyComponent implements OnInit {
       return;
     }
     const obj = { type: 'challenge', payload: { issuer: this.user.username, receiver: user.username, status: 'pending' } };
-    this.lobbyService.sendChallenge(obj.payload, 'pending', 'successfully issued challenge: ', 'failed to issue challenge: ');
+    this.lobbyService.sendChallengeEvent(obj.payload, 'pending', 'successfully issued challenge: ', 'failed to issue challenge: ');
   }
 
   updateChallenge(challenge, status) {
-    this.lobbyService.sendChallenge(challenge, status, `successfully ${status}ed challenge: `, `failed to ${status} challenge: `);
+    this.lobbyService.sendChallengeEvent(challenge, status, `successfully ${status}ed challenge: `, `failed to ${status} challenge: `);
   }
 }
