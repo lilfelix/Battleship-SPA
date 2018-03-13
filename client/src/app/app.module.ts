@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -19,6 +19,7 @@ import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
 import { HttpService } from './http.service';
 import { GameService } from './game/game.service';
+import { CustomReuseStrategy } from './custom-reuse-strategy';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,9 @@ import { GameService } from './game/game.service';
     AuthService,
     LobbyService,
     ChatService,
-    GameService],
+    GameService,
+    {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
