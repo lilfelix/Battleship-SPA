@@ -75,35 +75,53 @@ export function sendChallenges(obj: any) {
 
     // If error is not defined, the send has been completed, otherwise the error
     // object will indicate what failed.
-    if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
-        receiverSckt.send(JSON.stringify(obj), function ack(error) {
-            if (error != null) {
-                console.log(error)
-            }
-        });
-    }
-    if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
-        issuerSckt.send(JSON.stringify(obj), function ack(error) {
-            if (error != null) {
-                console.log(error)
-            }
-        });
-    }
-}
+    let receiverSent = new Promise((resolve, reject) => {
+        if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+            receiverSckt.send(JSON.stringify(obj), function ack(error) {
+                if (error != null) {
+                    console.log(error)
+                    reject(false)
+                } else {
+                    resolve(true);
+                }
+            });
+        } else {
+            reject(false);
+        }
+    });
 
-/** 
- * obj = {
- * type: 'game',
- * payload: {board: board, from: players[0], to: players[1], status: 'shipsPlaced'}
- * };
- */
-export function sendReadyState(obj: any) {
-    const receiverSckt = server.openSockets.get(obj.payload.to.username);
-    if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
-        receiverSckt.send(JSON.stringify(obj), function ack(error) {
-            if (error != null) {
-                console.log(error)
-            }
-        });
-    }
+    let issuerSent = new Promise((resolve, reject) => {
+        if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
+            issuerSckt.send(JSON.stringify(obj), function ack(error) {
+                if (error != null) {
+                    console.log(error)
+                    reject(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        }
+    });
+
+    return receiverSent.then((result) => {return  result ? issuerSent : Promise.resolve(false)});
 }
+    /** 
+     * obj = {
+     * type: 'game',
+     * payload: {board: board, from: players[0], to: players[1], status: 'shipsPlaced'}
+     * };
+     */
+    export function sendReadyState(obj: any) {
+        const receiverSckt = server.openSockets.get(obj.payload.to.username);
+        if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+            return new Promise((resolve, reject) => {
+                receiverSckt.send(JSON.stringify(obj), function ack(error) {
+                    if (error != null) {
+                        reject(console.log(error));
+                    } else {
+                        resolve(true);
+                    }
+                });
+            })
+        }
+    }

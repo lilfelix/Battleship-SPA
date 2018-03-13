@@ -69,10 +69,9 @@ router.get('/active', function (req, res) {
 });
 
 // Process challenge
-router.post('/challenge', function (req, res) {
-    handler.sendChallenges(req.body);
-    // success ? res.json({ success: true }) : res.json({ success: false });
-    res.json({ success: true }); 
+router.post('/challenge', async function (req, res) {
+    const success = await handler.sendChallenges(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
 });
 
 router.post('/message', function (req, res) {
@@ -83,13 +82,14 @@ router.post('/message', function (req, res) {
     res.json({ success: true }); 
 });
 
-router.post('/ready', function (req, res) {
-    handler.sendReadyState(req.body);
-    // success ? res.json({ success: true }) : res.json({ success: false });
-    res.json({ success: true }); 
+router.post('/ready', async function (req, res) {
+    const success = await handler.sendReadyState(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
+; 
 });
 
 function emptyResponse(res: express.Response, msg: string) {
     console.log(msg);
     res.json({});
 }
+
