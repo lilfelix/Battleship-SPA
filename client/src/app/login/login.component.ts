@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
 import { Router, NavigationEnd } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import 'rxjs/add/operator/filter';
 
 @Component({
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
   public username: string;
   private password: string;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService, private cookieService: CookieService) { }
 
   ngOnInit() {
     // When logging out, page is reloaded which in turn triggers login token to be discarded (in AppComponent)
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit {
       .subscribe((routeData: any) => {
         if (routeData.urlAfterRedirects === '/login') {
           window.location.reload();
+          this.cookieService.delete('token');
         }
       });
   }

@@ -20,6 +20,8 @@ import { BoardComponent } from './game/board/board.component';
 import { HttpService } from './http.service';
 import { GameService } from './game/game.service';
 import { CustomReuseStrategy } from './custom-reuse-strategy';
+import { CookieService } from 'ngx-cookie-service';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { CustomReuseStrategy } from './custom-reuse-strategy';
     LobbyService,
     ChatService,
     GameService,
-    {provide: RouteReuseStrategy, useClass: CustomReuseStrategy}
+    {provide: RouteReuseStrategy, useClass: CustomReuseStrategy},
+    CookieService
   ],
   bootstrap: [AppComponent]
 })
