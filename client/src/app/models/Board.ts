@@ -7,6 +7,8 @@ export class Board {
     boardStyles: any = {};
     totalNumShips: number;
     numPlacedShips = 0;
+    score = 0;
+    bombsDropped = 0;
 
     constructor(public id: number, public size: number, public owner: User, public frozen: boolean) {
         // Generate tiles for board

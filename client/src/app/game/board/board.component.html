@@ -1,10 +1,28 @@
 <div class="row">
+  <div class="col-sm-6">
+    <h3>Your board</h3>
+  </div>
+  <div class="col-sm-6">
+    <h3>Opponent's board</h3>
+  </div>
+</div>
+<div class="row">
   <div class="col-sm-6" *ngFor="let board of boards" [ngStyle]="board.boardStyles">
     <ng-template ngFor let-row [ngForOf]="board.tiles" let-j="index">
       <ng-template ngFor let-tile [ngForOf]="row" let-k="index">
         <div [ngStyle]="tile.tileStyles" (click)="clickEvent(tile, board)"> </div>
       </ng-template>
     </ng-template>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6" *ngFor="let board of boards">
+    <div *ngIf="gameStarted" class="alert alert-secondary" role="alert">
+      <!-- <p *ngIf="placedShips" class="font-weight-bold">Your turn: {{ clientTurn }}</p> -->
+      <p class="font-weight-bold">Ships remaining: {{ board.totalNumShips }}</p>
+      <p class="font-weight-bold">Bombs dropped: {{ board.bombsDropped }}</p>
+      <p class="font-weight-bold">Score: {{ board.score }}</p>
+    </div>
   </div>
 </div>
 <button *ngIf="!placedShips" type="button" class="btn btn-primary pull-right" [disabled]="!canContinue" (click)="freezeBoard()">Continue</button>

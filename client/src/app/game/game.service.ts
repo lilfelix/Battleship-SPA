@@ -47,6 +47,7 @@ export class GameService {
         if (result.success) {
           this.clientReady = true;
           if (this.opponentReady) {
+            this.gameEventSource.next('START');
             if (this.clientStarts) {
               this.gameEventSource.next('SHOOT');
             } else {
@@ -71,6 +72,7 @@ export class GameService {
         this.boards[1] = opponentBoard;
         this.opponentReady = true;
         if (this.clientReady) {
+          this.gameEventSource.next('START');
           if (this.clientStarts) {
             this.gameEventSource.next('SHOOT');
           } else {

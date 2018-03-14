@@ -20,6 +20,8 @@ export class BoardComponent implements OnInit {
   @Input() size: number; // Dimension of boards
   @Input() clientTurn = false; // Indicates if it's the client's turn to shoot
   @Input() players: User[]; // players[0] is always the client
+  @Input() gameStarted;
+  @Input() gameOver;
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
   placedShips = false;
   canContinue = false;
@@ -30,16 +32,13 @@ export class BoardComponent implements OnInit {
     this.boards.push(new Board(1, this.size, this.players[0], false));
     this.boards.push(new Board(2, this.size, this.players[1], false));
     this.gameService.boards = this.boards;
-    console.log('BOARDS', this.boards);
   }
 
   clickEvent(tile: Tile, board: Board) {
-    // console.log('tile\nboard.id\nfrozen\nclientTurn', [tile, board.id, board.frozen, this.clientTurn]);
     // Player can only interact with his own board when placing ships
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
-      // alert('Bomb dropped!');
       this.gameService.sendTorpedo(tile);
       this.gameService.checkHit(tile, false); // false indicates that it's the opponents board
     }

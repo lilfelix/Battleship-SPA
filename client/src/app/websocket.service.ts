@@ -34,7 +34,7 @@ export class WebsocketService {
     this.socket$.subscribe(
       (object) => {
         this.serverData.push(object);
-        console.log('websocketservice received from server: ', object);
+        // console.log('websocketservice received from server: ', object);
         switch (object.type) {
           case 'user':
             console.log('sending eventsource from wsService');

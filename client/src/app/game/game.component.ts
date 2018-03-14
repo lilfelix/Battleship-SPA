@@ -14,10 +14,11 @@ export class GameComponent implements OnInit {
 
   @Output() public size = 3;
   @Output() public players: User[];
-  @Output() clientTurn = false; // Indicates if it's the client's turn to shoot
-  gameEventSubscription: Subscription;
+  @Output() public clientTurn = false; // Indicates if it's the client's turn to shoot
+  @Output() public gameStarted = false;
+  @Output() public gameOver = false;
+  private gameEventSubscription: Subscription;
   private statusMsg = 'Place your ships on the board. Click continue when finished';
-  private gameOver = false;
 
   constructor(private lobbyService: LobbyService, private gameService: GameService) { }
 
@@ -32,6 +33,9 @@ export class GameComponent implements OnInit {
     this.gameEventSubscription = this.gameService.gameEventSource
       .subscribe((status) => {
         switch (status) {
+          case 'START':
+            this.gameStarted = true;
+            break;
           case 'SHOOT':
             this.statusMsg = 'It\'s your turn to shoot!';
             this.clientTurn = true;
