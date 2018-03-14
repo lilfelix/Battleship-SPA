@@ -6,6 +6,7 @@ import { Board } from '../../models/Board';
 import { Tile } from '../../models/Tile';
 import { Component, Input, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
+import { LobbyService } from '../../lobby/lobby.service';
 
 
 @Component({
@@ -19,9 +20,9 @@ export class BoardComponent implements OnInit {
   @Input() myTurn = false; // Indicates if it's the client's turn to shoot
   @Input() players: User[]; // players[0] is always the client
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
-  waiting = false; // Indicates if player is waiting for opponent during gameplay
+  placedShips = false;
 
-  constructor(private gameService: GameService) { }
+  constructor(private gameService: GameService, private lobbyService: LobbyService) { }
 
   ngOnInit() {
     this.boards.push(new Board(1, this.size, this.players[0], false));
@@ -40,13 +41,19 @@ export class BoardComponent implements OnInit {
 
   freezeBoard() {
     this.boards[0].frozen = true;
+    this.gameService.clientBoard = this.boards[0];
     this.gameService.sendReadyState(this.boards[0], this.players)
-    .subscribe((result) => {
-      result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
-      if (result.success) {
-        this.waiting = true;
-      }
-    });
-
+      .subscribe((result) => {
+        result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
+        if (result.success) {
+          this.placedShips = true;
+          this.gameService.clientReady = true;
+          if (this.gameService.opponentReady) {
+            this.lobbyService.initGame(this.players[0], this.players[1], false);
+          }
+        } else {
+          alert('Error: could not set board. Try again');
+        }
+      });
   }
 }
