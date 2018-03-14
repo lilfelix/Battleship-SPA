@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './login/auth.service';
@@ -35,5 +35,21 @@ export class AppComponent implements OnInit {
     this.gameEventSubscription = this.lobbyService.gameEventSource
       .subscribe((initiated: boolean) => { this.gameStarted = initiated; });
   }
+
+  @HostListener('window:onbeforeunload', ['$event'])
+onBeforeUnload() {
+    this.deleteAllCookies();
+}
+
+deleteAllCookies() {
+    const cookies = document.cookie.split(';');
+
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+}
 
 }
