@@ -15,17 +15,18 @@ import { HttpService } from '../http.service';
 export class LobbyComponent implements OnInit {
 
   @Output() public user: User;
-  @Output() players: User[];
+  @Output() players: User[] = [];
   challenges: Challenge[] = [];
   processChallengeSubscription: Subscription;
   displayUserSubscription: Subscription;
 
-  constructor(private http: HttpService, private lobbyService: LobbyService, private wsService: WebsocketService) { }
+  constructor(private http: HttpService, private lobbyService: LobbyService) { }
 
   ngOnInit() {
 
     // Set current user
     this.user = this.lobbyService.user;
+    console.log('init lobbyCmp user:' + this.user.username);
 
     // GET available players from server
     this.lobbyService.getActiveUsers()
@@ -35,7 +36,9 @@ export class LobbyComponent implements OnInit {
 
     // Subscribe to viewing new users that come online
     this.displayUserSubscription = this.lobbyService.displayUserSource
-      .subscribe((user: User) => { this.players.push(user); });
+      .subscribe((user: User) => {
+        if (user.username !== this.user.username) { this.players.push(user); }
+      });
 
     // Subscribe to new/accepted/rejected/cancelede challenges from players
     this.processChallengeSubscription = this.lobbyService.processChallengeSource

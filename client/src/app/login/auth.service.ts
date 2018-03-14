@@ -7,6 +7,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { handleError } from '../httpError';
 import { User } from '../models/User';
 import { AuthResponse } from '../models/AuthResponse';
+import { HttpService } from '../http.service';
+import { WebsocketService } from '../websocket.service';
 
 @Injectable()
 export class AuthService {
@@ -15,25 +17,23 @@ export class AuthService {
   public user: User;
   @Output() setUserSource = new Subject<User>();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpService, private wsService: WebsocketService) {
     this.user = new User();
     this.user.username = 'Guest';
   }
 
   // Authenticate existing or newly registered user (type property in autObj differs)
   authUser(authObj: any): Observable<AuthResponse> {
-    const options = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    };
-
-    return this.http.post<AuthResponse>(this.authUrl, JSON.stringify(authObj), options)
-    .pipe(
-      catchError(handleError('authUser', {type: authObj.type, payload: {}, token: ''}))
-    );
+   return this.http.post(this.authUrl, authObj, 'authUser');
   }
 
   setUser(user: User) {
     this.user = user;
     this.setUserSource.next(user);
   }
+
+  openWebSocket() {
+    this.wsService.openConnection(this.user);
+  }
+
 }

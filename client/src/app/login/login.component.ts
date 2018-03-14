@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
         } else {
           console.log('login successful!');
           this.authService.setUser(response.payload as User);
+          this.authService.openWebSocket();
           this.router.navigate(['lobby']);
           // Route to lobby page and set app.component.user to response.payload
         }
