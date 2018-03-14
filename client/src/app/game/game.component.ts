@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BoardComponent } from './board/board.component';
 import { User } from '../models/User';
 import { LobbyService } from '../lobby/lobby.service';
+import { GameService } from './game.service';
 
 @Component({
   selector: 'app-game',
@@ -10,14 +11,13 @@ import { LobbyService } from '../lobby/lobby.service';
 })
 export class GameComponent implements OnInit {
 
-  id: number;
-  players: User[];
-  size = 3;
-  finished: boolean;
+  public size = 3;
 
-  constructor(private lobbyService: LobbyService) {}
+  constructor(private lobbyService: LobbyService, private gameService: GameService) {}
 
   ngOnInit() {
-    this.players = this.lobbyService.getPlayers();
+    this.gameService.players = this.lobbyService.getPlayers();
+    this.gameService.starts = this.lobbyService.starts;
+    this.gameService.listenWebSocket();
   }
 }

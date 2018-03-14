@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 import { AuthService } from './login/auth.service';
 import { User } from './models/User';
 import { LobbyService } from './lobby/lobby.service';
 import { ChatService } from './chat/chat.service';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class WebsocketService {
 
-  // TODO socket handles login, game and chat objects
+  @Output() gameEventSource = new Subject<any>();
+  @Output() lobbyEventSource = new Subject<any>();
+  @Output() chatEventSource = new Subject<any>();
   public socket$: WebSocketSubject<any>;
   private serverData: any[] = [];
   public user: User;
 
-  // The singleton WebsocketService is the last service to be injected, ensuring it can access authService.user
   constructor(private authService: AuthService, private lobbyService: LobbyService, private chatService: ChatService) {
     this.user = this.authService.user;
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
@@ -32,13 +34,16 @@ export class WebsocketService {
         console.log('websocketservice received from server: ', object);
         switch (object.type) {
           case 'user':
-            this.lobbyService.displayUser(object.payload);
+            this.lobbyEventSource.next({status: 'NEW_USER', payload: object.payload});
             break;
           case 'challenge':
-            this.lobbyService.processChallenge(object.payload);
+            this.lobbyEventSource.next({status: 'CHALLENGE', payload: object.payload});
             break;
           case 'message':
-            this.chatService.displayMessage(object.payload);
+            this.chatEventSource.next(object.payload);
+            break;
+          case 'game':
+            this.gameEventSource.next(object.payload);
             break;
           default:
             console.log('Unidentified object from websocket:');
