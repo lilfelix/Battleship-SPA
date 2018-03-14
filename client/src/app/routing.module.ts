@@ -17,7 +17,8 @@ const appRoutes: Routes = [
   },
   {
     path: 'logout',
-    component: PageNotFoundComponent,
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
   {
     path: 'register',
@@ -47,7 +48,7 @@ const appRoutes: Routes = [
   imports: [
     RouterModule.forRoot(
       appRoutes,
-      // { enableTracing: true}
+      { enableTracing: true}
     )
   ],
   exports: [
