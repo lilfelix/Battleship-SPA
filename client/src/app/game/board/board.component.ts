@@ -21,7 +21,7 @@ export class BoardComponent implements OnInit {
   @Input() clientTurn = false; // Indicates if it's the client's turn to shoot
   @Input() players: User[]; // players[0] is always the client
   @Input() gameStarted;
-  @Input() gameOver;
+  @Input() gameOver = false;
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
   placedShips = false;
   canContinue = false;
@@ -47,7 +47,6 @@ export class BoardComponent implements OnInit {
   freezeBoard() {
     this.boards[0].frozen = true;
     this.placedShips = true;
-    this.gameService.gameEventSource.next('WAIT');
     this.gameService.boards = this.boards;
     this.gameService.sendReadyState(this.boards[0], this.players);
   }

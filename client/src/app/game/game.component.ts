@@ -45,11 +45,11 @@ export class GameComponent implements OnInit {
             this.clientTurn = false;
             break;
           case 'WIN':
-            this.statusMsg = 'You won!';
+            this.statusMsg = 'GAME OVER\nYou won!\n';
             this.gameOver = true;
             break;
           case 'DEFEAT':
-            this.statusMsg = 'You lost!';
+            this.statusMsg = 'GAME OVER\nYou lost!';
             this.gameOver = true;
             break;
           case 'INTERRUPT':

@@ -17,9 +17,9 @@ export class GameService {
   private torpedoURL = 'torpedo';
   public clientReady = false;
   public opponentReady = false;
-  public gameStarted = false; // TODO remove
   public clientStarts: boolean; // true if client shoots first after ships have been placed
-  public finished: boolean;
+  public gameStarted = false; // TODO remove
+  public gameOver: boolean;
   public players: User[];
   public boards: Board[];
   private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
@@ -61,6 +61,7 @@ export class GameService {
 
   }
 
+  // Game event received over web socket
   processGameEvent(event: any) {
     switch (event.status) {
       case 'PLACED_SHIPS':
@@ -82,13 +83,9 @@ export class GameService {
         break;
       case 'TORPEDO_FIRED':
         this.checkHit(event.tile, true);
-        this.gameEventSource.next('SHOOT');
         break;
-      case 'WIN':
-        break;
-      case 'DEFEAT':
-        break;
-      case 'INTERRUPT':
+     case 'INTERRUPT':
+        this.gameEventSource.next('INTERRUPT');
         break;
     }
   }
@@ -110,9 +107,7 @@ export class GameService {
     return this.http.post(this.torpedoURL, obj, 'sendTorpedo')
       .subscribe((result) => {
         result.success ? console.log('torpedo sent successfully') : console.log('torpedo failed to send');
-        if (result.success) {
-          this.gameEventSource.next('WAIT');
-        } else {
+        if (!result.success) {
           alert('Error: could not drop bomb. Try again');
         }
       });
@@ -120,25 +115,50 @@ export class GameService {
 
   checkHit(tile: Tile, clientBoard: boolean) {
     if (clientBoard) {
+      // Bomb dropped on client's board
+      this.boards[1].bombsDropped++;
       if (tile.used) {
+        this.boards[1].score++;
+        this.boards[0].totalNumShips--;
         Tile.setTileStyles(tile, true, true);
-        if (this.boards[1].totalNumShips === 1) {
-          this.finished = true;
-          this.gameEventSource.next('WIN');
+        if (this.boards[0].totalNumShips === 0) {
+          this.gameOver = true;
+          this.gameEventSource.next('DEFEAT');
+          this.updateClientHighscore('DEFEAT');
         } else {
-          this.boards[1].totalNumShips--;
+          this.gameEventSource.next('SHOOT');
         }
+      } else {
+        Tile.setTileStyles(tile, false, true);
+        this.gameEventSource.next('SHOOT');
       }
     } else {
+      // Bomb dropped on opponent's board
+      this.boards[0].bombsDropped++;
       if (tile.used) {
+        this.boards[0].score++;
+        this.boards[1].totalNumShips--;
         Tile.setTileStyles(tile, true, true);
-        if (this.boards[0].totalNumShips === 1) {
-          this.finished = true;
-          this.gameEventSource.next('DEFEAT');
+        if (this.boards[1].totalNumShips === 0) {
+          this.gameOver = true;
+          this.gameEventSource.next('WIN');
+          this.updateClientHighscore('WIN');
         } else {
-          this.boards[0].totalNumShips--;
+          this.gameEventSource.next('WAIT');
         }
+      } else {
+        Tile.setTileStyles(tile, false, true);
+        this.gameEventSource.next('WAIT');
       }
+    }
+  }
+
+  // TODO
+  updateClientHighscore(outcome: string) {
+    if (outcome === 'WIN') {
+      const obj = {};
+    } else if (outcome === 'DEFEAT') {
+      const obj = {};
     }
   }
 }
