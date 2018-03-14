@@ -27,6 +27,4 @@ export class Tile {
             'padding-bottom': '100%'
         };
     }
-
-
 }

@@ -88,12 +88,12 @@ export class GameService {
 
   hideShips(board: Board) {
     for (let i = 0; i < board.size; i++) {
-        for (let j = 0; j < board.size; j++) {
-            const t: Tile = board.tiles[i][j];
-            Tile.hide(t);
-        }
+      for (let j = 0; j < board.size; j++) {
+        const t: Tile = board.tiles[i][j];
+        Tile.hide(t);
+      }
     }
-}
+  }
 
   sendTorpedo(tile: Tile) {
     const obj = { type: 'game', payload: { tile: tile, issuer: this.players[0], receiver: this.players[1], status: 'TORPEDO_FIRED' } };
@@ -103,8 +103,20 @@ export class GameService {
         if (result.success) {
           this.gameEventSource.next('WAIT');
         } else {
-          alert('Error: could not set board. Try again');
+          alert('Error: could not drop bomb. Try again');
         }
       });
+  }
+
+  checkHit(tile: Tile) {
+    if (tile.used) {
+      Tile.setTileStyles(tile, true, true);
+      if (this.boards[1].totalNumShips === 1) {
+        this.finished = true;
+        this.gameEventSource.next('WIN');
+      } else {
+        this.boards[1].totalNumShips--;
+      }
+    }
   }
 }

@@ -39,8 +39,9 @@ export class BoardComponent implements OnInit {
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
-      alert('Bomb dropped!');
+      // alert('Bomb dropped!');
       this.gameService.sendTorpedo(tile);
+      this.gameService.checkHit(tile);
     }
   }
 
