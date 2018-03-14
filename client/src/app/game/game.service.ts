@@ -37,7 +37,10 @@ export class GameService {
 
   // notify server and opponent that this client is ready to play (ships placed on board)
   sendReadyState(board: Board, players: User[]) {
-    const obj = { type: 'game', payload: { board: board, issuer: players[0], receiver: players[1], status: 'PLACED_SHIPS' } };
+    const obj = {
+      type: 'game',
+      payload: { board: board, issuer: players[0].username, receiver: players[1].username, status: 'PLACED_SHIPS' }
+    };
     return this.http.post(this.readyURL, obj, 'sendReadyState')
       .subscribe((result) => {
         result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
@@ -57,7 +60,7 @@ export class GameService {
 
   }
 
-  processGameEvent(event) {
+  processGameEvent(event: any) {
     switch (event.status) {
       case 'PLACED_SHIPS':
         console.log('before hiding', event.board);
@@ -76,6 +79,8 @@ export class GameService {
         }
         break;
       case 'TORPEDO_FIRED':
+        this.checkHit(event.tile, true);
+        this.gameEventSource.next('SHOOT');
         break;
       case 'WIN':
         break;
@@ -96,7 +101,10 @@ export class GameService {
   }
 
   sendTorpedo(tile: Tile) {
-    const obj = { type: 'game', payload: { tile: tile, issuer: this.players[0], receiver: this.players[1], status: 'TORPEDO_FIRED' } };
+    const obj = {
+      type: 'game',
+      payload: { tile: tile, issuer: this.players[0].username, receiver: this.players[1].username, status: 'TORPEDO_FIRED' }
+    };
     return this.http.post(this.torpedoURL, obj, 'sendTorpedo')
       .subscribe((result) => {
         result.success ? console.log('torpedo sent successfully') : console.log('torpedo failed to send');
@@ -108,14 +116,26 @@ export class GameService {
       });
   }
 
-  checkHit(tile: Tile) {
-    if (tile.used) {
-      Tile.setTileStyles(tile, true, true);
-      if (this.boards[1].totalNumShips === 1) {
-        this.finished = true;
-        this.gameEventSource.next('WIN');
-      } else {
-        this.boards[1].totalNumShips--;
+  checkHit(tile: Tile, clientBoard: boolean) {
+    if (clientBoard) {
+      if (tile.used) {
+        Tile.setTileStyles(tile, true, true);
+        if (this.boards[1].totalNumShips === 1) {
+          this.finished = true;
+          this.gameEventSource.next('WIN');
+        } else {
+          this.boards[1].totalNumShips--;
+        }
+      }
+    } else {
+      if (tile.used) {
+        Tile.setTileStyles(tile, true, true);
+        if (this.boards[0].totalNumShips === 1) {
+          this.finished = true;
+          this.gameEventSource.next('DEFEAT');
+        } else {
+          this.boards[0].totalNumShips--;
+        }
       }
     }
   }

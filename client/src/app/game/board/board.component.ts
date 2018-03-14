@@ -34,14 +34,14 @@ export class BoardComponent implements OnInit {
   }
 
   clickEvent(tile: Tile, board: Board) {
-    console.log('tile\nboard.id\nfrozen\nclientTurn', [tile, board.id, board.frozen, this.clientTurn]);
+    // console.log('tile\nboard.id\nfrozen\nclientTurn', [tile, board.id, board.frozen, this.clientTurn]);
     // Player can only interact with his own board when placing ships
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
       // alert('Bomb dropped!');
       this.gameService.sendTorpedo(tile);
-      this.gameService.checkHit(tile);
+      this.gameService.checkHit(tile, false); // false indicates that it's the opponents board
     }
   }
 

@@ -13,10 +13,11 @@ import { Subscription } from 'rxjs/Subscription';
 export class GameComponent implements OnInit {
 
   @Output() public size = 3;
-  @Output() public players;
+  @Output() public players: User[];
   @Output() clientTurn = false; // Indicates if it's the client's turn to shoot
   gameEventSubscription: Subscription;
   private statusMsg = 'Place your ships on the board. Click continue when finished';
+  private gameOver = false;
 
   constructor(private lobbyService: LobbyService, private gameService: GameService) { }
 
@@ -40,10 +41,16 @@ export class GameComponent implements OnInit {
             this.clientTurn = false;
             break;
           case 'WIN':
+            this.statusMsg = 'You won!';
+            this.gameOver = true;
             break;
           case 'DEFEAT':
+            this.statusMsg = 'You lost!';
+            this.gameOver = true;
             break;
           case 'INTERRUPT':
+            this.statusMsg = 'Game interrupted!';
+            this.gameOver = true;
             break;
         }
       });

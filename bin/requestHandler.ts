@@ -73,55 +73,26 @@ export function sendChallenges(obj: any) {
     const receiverSckt = server.openSockets.get(payload.receiver);
     const issuerSckt = server.openSockets.get(payload.issuer);
 
-    // If error is not defined, the send has been completed, otherwise the error
-    // object will indicate what failed.
-    let receiverSent = new Promise((resolve, reject) => {
-        if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+    let receiverSent = forwardScktMsg(obj, payload.receiver);
+    let issuerSent = forwardScktMsg(obj, payload.issuer);
+    return receiverSent.then((result) => { return result ? issuerSent : Promise.resolve(false) });
+}
+
+// If error is not defined, the send has been completed, otherwise the error
+// object will indicate what failed.
+export function forwardScktMsg(obj: any, receiver: string) {
+    const receiverSckt = server.openSockets.get(receiver);
+    if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
+        return new Promise((resolve, reject) => {
             receiverSckt.send(JSON.stringify(obj), function ack(error) {
                 if (error != null) {
-                    console.log(error)
-                    reject(false)
+                    reject(console.log(error));
                 } else {
                     resolve(true);
                 }
             });
-        } else {
-            reject(false);
-        }
-    });
-
-    let issuerSent = new Promise((resolve, reject) => {
-        if (issuerSckt != null && issuerSckt.readyState === WebSocket.OPEN) {
-            issuerSckt.send(JSON.stringify(obj), function ack(error) {
-                if (error != null) {
-                    console.log(error)
-                    reject(false);
-                } else {
-                    resolve(true);
-                }
-            });
-        }
-    });
-
-    return receiverSent.then((result) => {return  result ? issuerSent : Promise.resolve(false)});
-}
-    /** 
-     * obj = {
-     * type: 'game',
-     * payload: {board: board, issuer: players[0], receiver: players[1], status: 'PLACED_SHIPS'}
-     * };
-     */
-    export function sendReadyState(obj: any) {
-        const receiverSckt = server.openSockets.get(obj.payload.receiver.username);
-        if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
-            return new Promise((resolve, reject) => {
-                receiverSckt.send(JSON.stringify(obj), function ack(error) {
-                    if (error != null) {
-                        reject(console.log(error));
-                    } else {
-                        resolve(true);
-                    }
-                });
-            })
-        }
+        })
+    } else {
+        return Promise.resolve(false);
     }
+}

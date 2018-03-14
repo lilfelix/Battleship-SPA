@@ -21,7 +21,7 @@ export class Tile {
         tile.hit = hit;
         tile.tileStyles = {
             'background-color': tile.used ? 'grey' : 'white',
-            'border': tile.hit ? '1px solid rgb(157, 157, 165)' : '1px solid black',
+            'border': tile.hit ? '5px solid red' : '1px solid black',
             'grid-column': `${tile.col} / span 1`,
             'grid-row': ` ${tile.row} / span 1`,
             'padding-bottom': '100%'
