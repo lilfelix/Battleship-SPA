@@ -37,5 +37,6 @@ export class Board {
             this.numPlacedShips++;
             tile.setTileStyles(true, false);
         }
+        return this.numPlacedShips === this.totalNumShips;
     }
 }

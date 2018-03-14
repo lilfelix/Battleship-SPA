@@ -17,8 +17,11 @@ export class WebsocketService {
   private serverData: any[] = [];
   public user: User;
 
-  constructor(private authService: AuthService, private lobbyService: LobbyService, private chatService: ChatService) {
-    this.user = this.authService.user;
+  constructor() {}
+
+  openConnection(user: User ) {
+    this.user = user;
+    console.log('opening web socket for user: ', this.user.username);
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
 
     /**
@@ -34,10 +37,11 @@ export class WebsocketService {
         console.log('websocketservice received from server: ', object);
         switch (object.type) {
           case 'user':
-            this.lobbyEventSource.next({status: 'NEW_USER', payload: object.payload});
+            console.log('sending eventsource from wsService');
+            this.lobbyEventSource.next({ status: 'NEW_USER', payload: object.payload });
             break;
           case 'challenge':
-            this.lobbyEventSource.next({status: 'CHALLENGE', payload: object.payload});
+            this.lobbyEventSource.next({ status: 'CHALLENGE', payload: object.payload });
             break;
           case 'message':
             this.chatEventSource.next(object.payload);
