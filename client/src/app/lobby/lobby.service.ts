@@ -20,7 +20,7 @@ export class LobbyService {
   private challengeURL = 'challenge';
   public user: User;
   public opponent: User;
-  public starts: boolean;
+  public clientStarts: boolean;
   @Output() processChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
   @Output() gameEventSource = new Subject<any>();
@@ -77,12 +77,12 @@ export class LobbyService {
         result.success ? console.log(successMsg + challenge.receiver) : console.log(errMsg + challenge.receiver);
       });
     if (status = 'accept') {
-      this.starts = false;
+      this.clientStarts = false;
     }
   }
 
-  initGame(user: User, opponent: User, starts: boolean) {
-    this.starts = starts;
+  initGame(user: User, opponent: User, clientStarts: boolean) {
+    this.clientStarts = clientStarts;
     this.opponent = opponent;
     this.gameEventSource.next(true);
     this.router.navigate(['game']);

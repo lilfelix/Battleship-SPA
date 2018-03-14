@@ -108,11 +108,11 @@ export function sendChallenges(obj: any) {
     /** 
      * obj = {
      * type: 'game',
-     * payload: {board: board, from: players[0], to: players[1], status: 'shipsPlaced'}
+     * payload: {board: board, issuer: players[0], receiver: players[1], status: 'PLACED_SHIPS'}
      * };
      */
     export function sendReadyState(obj: any) {
-        const receiverSckt = server.openSockets.get(obj.payload.to.username);
+        const receiverSckt = server.openSockets.get(obj.payload.receiver.username);
         if (receiverSckt != null && receiverSckt.readyState === WebSocket.OPEN) {
             return new Promise((resolve, reject) => {
                 receiverSckt.send(JSON.stringify(obj), function ack(error) {

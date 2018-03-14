@@ -8,12 +8,13 @@ import { HttpService } from '../http.service';
 import { Subscription } from 'rxjs/Subscription';
 import { WebsocketService } from '../websocket.service';
 import { Subject } from 'rxjs/Subject';
+import { Tile } from '../models/Tile';
 
 @Injectable()
 export class GameService {
 
   private readyURL = 'ready';
-  private gameEventSubscription: Subscription;
+  private torpedoURL = 'torpedo';
   public clientReady = false;
   public opponentReady = false;
   public gameStarted = false;
@@ -22,7 +23,8 @@ export class GameService {
   public clientStarts: boolean; // true if client shoots first after ships have been placed
   public finished: boolean;
   public players: User[];
-  @Output() gameEventSource = new Subject<any>();
+  private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
+  @Output() gameEventSource = new Subject<any>(); // Issue events to game/board component
 
 
   constructor(private http: HttpService, private wsService: WebsocketService) { }
@@ -30,29 +32,33 @@ export class GameService {
   listenWebSocket() {
     this.wsService.gameEventSource
       .subscribe((event: any) => {
-        this.parseGameEvent(event);
+        this.processGameEvent(event);
       });
   }
 
   // notify server and opponent that this client is ready to play (ships placed on board)
   sendReadyState(board: Board, players: User[]) {
-    const obj = { type: 'game', payload: { board: board, from: players[0], to: players[1], status: 'PLACED_SHIPS' } };
+    const obj = { type: 'game', payload: { board: board, issuer: players[0], receiver: players[1], status: 'PLACED_SHIPS' } };
     return this.http.post(this.readyURL, obj, 'sendReadyState')
-    .subscribe((result) => {
-      result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
-      if (result.success) {
-        this.clientReady = true;
-        if (this.opponentReady && this.clientStarts) {
-        this.gameEventSource.next('SHOOT');
+      .subscribe((result) => {
+        result.success ? console.log('readyState sent successfully') : console.log('readyState failed to send');
+        if (result.success) {
+          this.clientReady = true;
+          if (this.opponentReady) {
+            if (this.clientStarts) {
+              this.gameEventSource.next('SHOOT');
+            } else {
+              this.gameEventSource.next('WAIT');
+            }
+          }
+        } else {
+          alert('Error: could not set board. Try again');
         }
-      } else {
-        alert('Error: could not set board. Try again');
-      }
-    });
+      });
 
   }
 
-  parseGameEvent(event) {
+  processGameEvent(event) {
     switch (event.status) {
       case 'PLACED_SHIPS':
         this.opponentBoard = event.board;
@@ -60,6 +66,8 @@ export class GameService {
         if (this.clientReady) {
           if (this.clientStarts) {
             this.gameEventSource.next('SHOOT');
+          } else {
+            this.gameEventSource.next('WAIT');
           }
         }
         break;
@@ -72,5 +80,18 @@ export class GameService {
       case 'INTERRUPT':
         break;
     }
+  }
+
+  sendTorpedo(tile: Tile) {
+    const obj = { type: 'game', payload: { tile: tile, issuer: this.players[0], receiver: this.players[1], status: 'TORPEDO_FIRED' } };
+    return this.http.post(this.torpedoURL, obj, 'sendTorpedo')
+      .subscribe((result) => {
+        result.success ? console.log('torpedo sent successfully') : console.log('torpedo failed to send');
+        if (result.success) {
+          this.gameEventSource.next('WAIT');
+        } else {
+          alert('Error: could not set board. Try again');
+        }
+      });
   }
 }

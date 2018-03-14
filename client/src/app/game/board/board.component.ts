@@ -23,7 +23,6 @@ export class BoardComponent implements OnInit {
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
   placedShips = false;
   canContinue = false;
-  gameEventSubscription: Subscription;
 
   constructor(private gameService: GameService, private lobbyService: LobbyService) { }
 
@@ -31,21 +30,6 @@ export class BoardComponent implements OnInit {
     this.boards.push(new Board(1, this.size, this.players[0], false));
     this.boards.push(new Board(2, this.size, this.players[1], false));
     console.log('BOARDS', this.boards);
-
-    this.gameEventSubscription = this.gameService.gameEventSource
-    .subscribe((status) => {
-      switch (status) {
-        case 'SHOOT':
-          this.clientTurn = true;
-          break;
-        case 'WIN':
-          break;
-        case 'DEFEAT':
-          break;
-        case 'INTERRUPT':
-          break;
-      }
-    });
   }
 
   clickEvent(tile: Tile, board: Board) {
@@ -53,13 +37,15 @@ export class BoardComponent implements OnInit {
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
-      // TODO call service to drop bomb at tile
+      alert('Bomb dropped!');
+      this.gameService.sendTorpedo(tile);
     }
   }
 
   freezeBoard() {
     this.boards[0].frozen = true;
     this.placedShips = true;
+    this.gameService.gameEventSource.next('WAIT');
     this.gameService.clientBoard = this.boards[0];
     this.gameService.sendReadyState(this.boards[0], this.players);
  }
