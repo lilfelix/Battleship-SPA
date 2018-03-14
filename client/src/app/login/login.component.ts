@@ -20,13 +20,13 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService, private cookieService: CookieService) { }
 
   ngOnInit() {
-    // When logging out, page is reloaded which in turn triggers login token to be discarded (in AppComponent)
+    this.cookieService.deleteAll('/', 'localhost');
+    // When logging out, page is reloaded which in turn triggers login token to be discarded
     this.router.events
       .filter((event) => (event instanceof NavigationEnd))
       .subscribe((routeData: any) => {
         if (routeData.urlAfterRedirects === '/login') {
           window.location.reload();
-          this.cookieService.delete('token');
         }
       });
   }

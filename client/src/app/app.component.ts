@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, OnDestroy } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './login/auth.service';
 import { WebsocketService } from './websocket.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LobbyService } from './lobby/lobby.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -36,20 +37,20 @@ export class AppComponent implements OnInit {
       .subscribe((initiated: boolean) => { this.gameStarted = initiated; });
   }
 
-  @HostListener('window:onbeforeunload', ['$event'])
-onBeforeUnload() {
-    this.deleteAllCookies();
-}
+  // @HostListener('window:onbeforeunload', ['$event'])
+  // onBeforeUnload() {
+  //   this.deleteAllCookies();
+  // }
 
-deleteAllCookies() {
-    const cookies = document.cookie.split(';');
+  // deleteAllCookies() {
+  //   const cookies = document.cookie.split(';');
 
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf('=');
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    }
-}
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     const cookie = cookies[i];
+  //     const eqPos = cookie.indexOf('=');
+  //     const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+  //     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  //   }
+  // }
 
 }
