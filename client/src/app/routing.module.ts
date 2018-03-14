@@ -10,6 +10,7 @@ import { ChatComponent } from './chat/chat.component';
 import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
 import { HighscoreComponent } from './highscore/highscore.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const appRoutes: Routes = [
   {
@@ -20,6 +21,10 @@ const appRoutes: Routes = [
     path: 'logout',
     redirectTo: '/login',
     pathMatch: 'full'
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
   },
   {
     path: 'register',

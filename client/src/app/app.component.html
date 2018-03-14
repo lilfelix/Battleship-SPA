@@ -3,7 +3,7 @@
     <div class="card-header ">
       <ul class="nav nav-tabs card-header-tabs ">
         <li class="nav-item ">
-          <a>{{ status }}</a>
+          <a routerLink="/profile" routerLinkActive="active " [style.pointer-events]="loggedIn ? 'auto' : 'none'">{{ status }}</a>
         </li>
         <li class="nav-item ">
           <a *ngIf="!loggedIn" routerLink="/login" routerLinkActive="active ">Login</a>
