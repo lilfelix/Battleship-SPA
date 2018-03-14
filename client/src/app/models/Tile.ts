@@ -1,19 +1,32 @@
 export class Tile {
     tileStyles: any;
     constructor(public used: boolean, public hit: boolean, public row: number, public col: number) {
-        this.setTileStyles(false, false);
+        Tile.setTileStyles(this, false, false);
     }
 
-    setTileStyles(used: boolean, hit: boolean) {
-        this.used = used;
-        this.hit = hit;
-        this.tileStyles = {
-            'background-color': this.used ? 'grey' : 'white',
-            'border': this.hit ? '1px solid rgb(157, 157, 165)' : '1px solid black',
-            'grid-column': `${this.col} / span 1`,
-            'grid-row': ` ${this.row} / span 1`,
+    static hide(tile: Tile) {
+        if (tile.used) {
+            tile.tileStyles = {
+                'background-color': 'white',
+                'border': '1px solid black',
+                'grid-column': `${tile.col} / span 1`,
+                'grid-row': ` ${tile.row} / span 1`,
+                'padding-bottom': '100%'
+            };
+        }
+    }
+
+    static setTileStyles(tile: Tile, used: boolean, hit: boolean) {
+        tile.used = used;
+        tile.hit = hit;
+        tile.tileStyles = {
+            'background-color': tile.used ? 'grey' : 'white',
+            'border': tile.hit ? '1px solid rgb(157, 157, 165)' : '1px solid black',
+            'grid-column': `${tile.col} / span 1`,
+            'grid-row': ` ${tile.row} / span 1`,
             'padding-bottom': '100%'
         };
     }
+
 
 }

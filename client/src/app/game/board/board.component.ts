@@ -29,10 +29,12 @@ export class BoardComponent implements OnInit {
   ngOnInit() {
     this.boards.push(new Board(1, this.size, this.players[0], false));
     this.boards.push(new Board(2, this.size, this.players[1], false));
+    this.gameService.boards = this.boards;
     console.log('BOARDS', this.boards);
   }
 
   clickEvent(tile: Tile, board: Board) {
+    console.log('tile\nboard.id\nfrozen\nclientTurn', [tile, board.id, board.frozen, this.clientTurn]);
     // Player can only interact with his own board when placing ships
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
@@ -46,7 +48,7 @@ export class BoardComponent implements OnInit {
     this.boards[0].frozen = true;
     this.placedShips = true;
     this.gameService.gameEventSource.next('WAIT');
-    this.gameService.clientBoard = this.boards[0];
+    this.gameService.boards = this.boards;
     this.gameService.sendReadyState(this.boards[0], this.players);
- }
+  }
 }

@@ -17,12 +17,11 @@ export class GameService {
   private torpedoURL = 'torpedo';
   public clientReady = false;
   public opponentReady = false;
-  public gameStarted = false;
-  public clientBoard: Board;
-  public opponentBoard: Board;
+  public gameStarted = false; // TODO remove
   public clientStarts: boolean; // true if client shoots first after ships have been placed
   public finished: boolean;
   public players: User[];
+  public boards: Board[];
   private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
   @Output() gameEventSource = new Subject<any>(); // Issue events to game/board component
 
@@ -61,7 +60,12 @@ export class GameService {
   processGameEvent(event) {
     switch (event.status) {
       case 'PLACED_SHIPS':
-        this.opponentBoard = event.board;
+        console.log('before hiding', event.board);
+        const opponentBoard: Board = event.board;
+        opponentBoard.id = 2;
+        this.hideShips(opponentBoard);
+        console.log('after hiding', opponentBoard);
+        this.boards[1] = opponentBoard;
         this.opponentReady = true;
         if (this.clientReady) {
           if (this.clientStarts) {
@@ -81,6 +85,15 @@ export class GameService {
         break;
     }
   }
+
+  hideShips(board: Board) {
+    for (let i = 0; i < board.size; i++) {
+        for (let j = 0; j < board.size; j++) {
+            const t: Tile = board.tiles[i][j];
+            Tile.hide(t);
+        }
+    }
+}
 
   sendTorpedo(tile: Tile) {
     const obj = { type: 'game', payload: { tile: tile, issuer: this.players[0], receiver: this.players[1], status: 'TORPEDO_FIRED' } };

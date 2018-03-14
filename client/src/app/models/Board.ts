@@ -32,10 +32,10 @@ export class Board {
     placeShip(tile: Tile) {
         if (tile.used) {
             this.numPlacedShips--;
-            tile.setTileStyles(false, false);
+            Tile.setTileStyles(tile, false, false);
         } else {
             this.numPlacedShips++;
-            tile.setTileStyles(true, false);
+            Tile.setTileStyles(tile, true, false);
         }
         return this.numPlacedShips === this.totalNumShips;
     }
