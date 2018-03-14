@@ -2,7 +2,13 @@
   <div class="card-body">
     <h4 class="card-title">Highscore</h4>
     <div class="list-group">
-      <li *ngFor="let entry of entries" class="list-group-item"></li>
+      <li *ngFor="let entry of entries" class="list-group-item">
+          <div class="alert alert-secondary" role="alert">
+              <p class="font-weight-bold">User: {{ entry.user.username }}</p>
+              <p class="font-weight-bold">Games played: {{ entry.numGames }}</p>
+              <p class="font-weight-bold">Won/Lost: {{ entry.numWon }}/{{ entry.numLost }}</p>
+            </div>
+      </li>
     </div>
   </div>
 </div>

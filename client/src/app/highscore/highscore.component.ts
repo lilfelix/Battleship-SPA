@@ -15,7 +15,10 @@ export class HighscoreComponent implements OnInit {
 
   ngOnInit() {
     this.http.get(this.highscoreURL, 'getHighscore')
-    .subscribe((entries: Highscore[]) => { this.entries = entries; });
+      .subscribe((entries: Highscore[]) => {
+        console.log('received highscore', entries);
+        this.entries = entries;
+      });
   }
 
 }

@@ -18,7 +18,6 @@
 <div class="row">
   <div class="col-sm-6" *ngFor="let board of boards">
     <div *ngIf="gameStarted" class="alert alert-secondary" role="alert">
-      <!-- <p *ngIf="placedShips" class="font-weight-bold">Your turn: {{ clientTurn }}</p> -->
       <p class="font-weight-bold">Ships remaining: {{ board.totalNumShips }}</p>
       <p class="font-weight-bold">Bombs dropped: {{ board.bombsDropped }}</p>
       <p class="font-weight-bold">Score: {{ board.score }}</p>
@@ -26,5 +25,4 @@
   </div>
 </div>
 <button *ngIf="!placedShips" type="button" class="btn btn-primary pull-right" [disabled]="!canContinue" (click)="freezeBoard()">Continue</button>
-<!-- <div *ngIf="gameOver" class="alert alert-secondary" role="alert">Game over</div> -->
  
