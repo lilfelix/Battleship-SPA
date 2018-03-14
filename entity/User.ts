@@ -23,6 +23,7 @@ export class User {
     pwHash: string;
 
     @OneToOne(type => Highscore, highscore => highscore.user, {
+        eager: true,
         cascadeInsert: true,
         cascadeRemove: true
     })

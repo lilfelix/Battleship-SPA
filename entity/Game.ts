@@ -8,10 +8,10 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // A user can participate in many games. A game can have many users
-    @ManyToMany(type => User, user => user.games)
-    @JoinTable()
-    users: User[];
+    // // A user can participate in many games. A game can have many users
+    // @ManyToMany(type => User, user => user.games)
+    // @JoinTable()
+    // users: User[];
 
     @Column()
     player1Score: number;

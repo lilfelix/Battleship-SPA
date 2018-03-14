@@ -26,6 +26,8 @@ createConnection().then(async connection => {
   user2.username = "alice";
   user2.name = "Alice Moe";
   user2.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
+
+  await connection.manager.save([user1, user2]);
   const highscore1 = new Highscore();
   highscore1.user =  user1;
   highscore1.numGames = 10;
@@ -37,7 +39,7 @@ createConnection().then(async connection => {
   highscore2.numWon = 5;
   highscore2.numLost = 3;
 
-  await connection.manager.save([user1, user2, highscore1, highscore2]);
+  await connection.manager.save([highscore1, highscore2]);
   const users = await connection.manager.find(User);
 }).catch(error => console.log(error))
 

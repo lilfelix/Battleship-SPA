@@ -71,9 +71,14 @@ export function getActiveUsers() {
 export async function getHighscore() {
     const repository = getRepository(Highscore);
     const entries = await repository.find({
+        relations: ["user"],
         order: {
             "numWon": "DESC"
         }
+    });
+    // Clear the pwHash before sending to client
+    entries.forEach((entry)=> {
+        entry.user.pwHash = '';
     });
     return entries;
 }
