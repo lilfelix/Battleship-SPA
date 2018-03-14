@@ -16,6 +16,10 @@ const appRoutes: Routes = [
     component: LoginComponent,
   },
   {
+    path: 'logout',
+    component: PageNotFoundComponent,
+  },
+  {
     path: 'register',
     component: RegisterComponent,
   },

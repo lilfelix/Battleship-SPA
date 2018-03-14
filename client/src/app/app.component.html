@@ -6,14 +6,15 @@
           <a>{{ status }}</a>
         </li>
         <li class="nav-item ">
-          <a routerLink="/login" routerLinkActive="active ">Login</a>
+          <a *ngIf="!loggedIn" routerLink="/login" routerLinkActive="active ">Login</a>
+          <a *ngIf="loggedIn" routerLink="/logout" routerLinkActive="active ">Logout</a>
         </li>
         <li class="nav-item ">
           <a routerLink="/lobby" routerLinkActive="active ">Lobby</a>
         </li>
         <li class="nav-item ">
-            <a routerLink="/game" routerLinkActive="active ">Game</a>
-          </li>
+          <a [style.pointer-events]="gameStarted ? 'auto' : 'none'" routerLink="/game" routerLinkActive="active ">Game</a>
+        </li>
       </ul>
     </div>
     <div class="card-body ">

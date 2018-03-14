@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './login/auth.service';
 import { WebsocketService } from './websocket.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { LobbyService } from './lobby/lobby.service';
 
 @Component({
   selector: 'app-root',
@@ -15,20 +16,24 @@ export class AppComponent implements OnInit {
   public user: User;
   status = 'User: Guest';
   setUserSubscription: Subscription;
-  // private wsService: WebsocketService;
+  gameEventSubscription: Subscription;
+  public loggedIn = false;
+  public gameStarted = false;
 
-  constructor(private authService: AuthService) {
-    this.user = new User();
-    this.user.username = 'Guest';
+  constructor(private authService: AuthService, private lobbyService: LobbyService) {
   }
 
   ngOnInit() {
+    this.user = this.authService.user;
     this.setUserSubscription = this.authService.setUserSource
-    .subscribe((user: User) => { this.setUser(user); });
+      .subscribe((user: User) => {
+        this.user = user;
+        this.status = 'User: ' + this.user.username;
+        this.loggedIn = true;
+      });
+
+    this.gameEventSubscription = this.lobbyService.gameEventSource
+      .subscribe((initiated: boolean) => { this.gameStarted = initiated; });
   }
 
-  setUser(user: User) {
-    this.user = user;
-    this.status = 'User: ' + this.user.username;
-  }
 }
