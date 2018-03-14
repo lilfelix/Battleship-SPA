@@ -14,16 +14,14 @@ export class ChatComponent implements OnInit {
 
   @Input() user: User;
   @Input() users: User[];
-  message = '';
   messages: Message[] = [];
   displayMessageSubscription: Subscription;
+  message = '';
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    // Subscribe to viewing new users that come online
-    this.displayMessageSubscription = this.chatService.displayMessageSource
-      .subscribe((msg: Message) => { this.messages.push(msg); });
+    this.chatService.messages = this.messages;
   }
 
   onSubmit() {
