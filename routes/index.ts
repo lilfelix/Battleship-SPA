@@ -64,8 +64,14 @@ router.get('/active', function (req, res) {
         console.log('No active users :(');
     } else {
         console.log('Sending active users: ', users);
-        res.json(users);
     }
+    res.json(users);
+});
+
+router.get('/highscore', async function (req, res) {
+    const entries = await handler.getHighscore();
+    console.log('sending highscore', entries);
+    res.json(entries);
 });
 
 router.post('/message', function (req, res) {
@@ -73,7 +79,7 @@ router.post('/message', function (req, res) {
     // console.log('success in router is', success);
     // success ? res.json({ success: true }) : res.json({ success: false });
     // TODO save msg to chat history table in db
-    res.json({ success: true }); 
+    res.json({ success: true });
 });
 
 // Process challenge
@@ -86,13 +92,13 @@ router.post('/challenge', async function (req, res) {
 router.post('/ready', async function (req, res) {
     const success = await handler.forwardScktMsg(req.body, req.body.payload.receiver);
     success ? res.json({ success: true }) : res.json({ success: false });
-; 
+    ;
 });
 
 router.post('/torpedo', async function (req, res) {
     const success = await handler.forwardScktMsg(req.body, req.body.payload.receiver);
     success ? res.json({ success: true }) : res.json({ success: false });
-; 
+    ;
 })
 
 function emptyResponse(res: express.Response, msg: string) {

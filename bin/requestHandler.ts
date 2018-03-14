@@ -15,6 +15,7 @@ import { server } from '../bin/www';
 import "reflect-metadata";
 import { createConnection, Connection, getConnection, getRepository } from "typeorm";
 import { User } from "../entity/User";
+import { Highscore } from '../entity/Highscore';
 const authSecret = '@9O37m1O3ISg';
 const saltRounds = 10;
 
@@ -65,6 +66,16 @@ export function getActiveUsers() {
         users.push({ username: n });
     });
     return users;
+}
+
+export async function getHighscore() {
+    const repository = getRepository(Highscore);
+    const entries = await repository.find({
+        order: {
+            "numWon": "DESC"
+        }
+    });
+    return entries;
 }
 
 // Send challenges to affected sockets.

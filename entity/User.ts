@@ -29,12 +29,12 @@ export class User {
     highscore: Highscore;
 
     // A user can participate in many games. A game can have many users
-    @ManyToMany(type => Game, game => game.users)
-    games: Game[];
+    // @ManyToMany(type => Game, game => game.users)
+    // games: Game[];
 
     // A board has only one user. A user can have many boards
-    @OneToMany(type => Board, board => board.owner)
-    boards: Board[];
+    // @OneToMany(type => Board, board => board.owner)
+    // boards: Board[];
 
     // @JoinColumn() can be emitted in OneToMany/ManyToOne
     @OneToMany(type => Message, message => message.recipient)

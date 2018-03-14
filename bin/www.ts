@@ -11,6 +11,7 @@ import url from 'url';
 import "reflect-metadata";
 import { createConnection, Connection, getConnection } from "typeorm";
 import { User } from "../entity/User";
+import { Highscore } from '../entity/Highscore';
 
 /**
  * Connect to database
@@ -25,8 +26,18 @@ createConnection().then(async connection => {
   user2.username = "alice";
   user2.name = "Alice Moe";
   user2.pwHash = '$2a$10$3Clua6AvGsqGgD8mego02u2Rye5j2yu1S1AAmDx0OaiahjnDI6102';
+  const highscore1 = new Highscore();
+  highscore1.user =  user1;
+  highscore1.numGames = 10;
+  highscore1.numWon = 0;
+  highscore1.numLost = 10;
+  const highscore2 = new Highscore();
+  highscore2.user = user2;
+  highscore2.numGames = 8;
+  highscore2.numWon = 5;
+  highscore2.numLost = 3;
 
-  await connection.manager.save([user1, user2]);
+  await connection.manager.save([user1, user2, highscore1, highscore2]);
   const users = await connection.manager.find(User);
 }).catch(error => console.log(error))
 

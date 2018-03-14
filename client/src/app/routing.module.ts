@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { ChatComponent } from './chat/chat.component';
 import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
+import { HighscoreComponent } from './highscore/highscore.component';
 
 const appRoutes: Routes = [
   {
@@ -32,6 +33,10 @@ const appRoutes: Routes = [
   {
     path: 'game',
     component: GameComponent,
+  },
+  {
+    path: 'highscore',
+    component: HighscoreComponent,
   },
   {
     path: '',
