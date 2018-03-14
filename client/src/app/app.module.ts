@@ -21,6 +21,7 @@ import { HttpService } from './http.service';
 import { GameService } from './game/game.service';
 import { CustomReuseStrategy } from './custom-reuse-strategy';
 import { CookieService } from 'ngx-cookie-service';
+import { HighscoreComponent } from './highscore/highscore.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { CookieService } from 'ngx-cookie-service';
     RegisterComponent,
     ChatComponent,
     GameComponent,
-    BoardComponent
+    BoardComponent,
+    HighscoreComponent
   ],
   imports: [
     BrowserModule,
