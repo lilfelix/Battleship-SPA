@@ -6,6 +6,7 @@ import { User } from './models/User';
 import { LobbyService } from './lobby/lobby.service';
 import { ChatService } from './chat/chat.service';
 import { Subject } from 'rxjs/Subject';
+import { Message } from './models/Message';
 
 @Injectable()
 export class WebsocketService {
@@ -44,7 +45,7 @@ export class WebsocketService {
             this.lobbyEventSource.next({ status: 'CHALLENGE', payload: object.payload });
             break;
           case 'message':
-            this.chatEventSource.next(object.payload);
+            this.chatEventSource.next(object.payload as Message);
             break;
           case 'game':
             this.gameEventSource.next(object.payload);

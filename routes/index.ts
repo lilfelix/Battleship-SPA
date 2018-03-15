@@ -83,7 +83,16 @@ router.post('/highscore', async function (req, res) {
     success ? res.json({ success: true }) : res.json({ success: false });
 });
 
+// GET messages to client for display
+router.get('/message', async function (req, res) {
+    const messages = await handler.getMessages();
+    console.log('sending messages', messages);
+    res.json(messages);
+});
+
+// POST new message from client to server
 router.post('/message', function (req, res) {
+    console.log('received message', req.body);
     const success = handler.processMsg(req.body as Message);
     success ? res.json({ success: true }) : res.json({ success: false });
 });

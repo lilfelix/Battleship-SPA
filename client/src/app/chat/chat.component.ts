@@ -16,20 +16,21 @@ export class ChatComponent implements OnInit {
   @Input() users: User[];
   messages: Message[] = [];
   displayMessageSubscription: Subscription;
-  message = '';
+  msgText = '';
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
+    // Refer to the message list in chat service
     this.chatService.messages = this.messages;
+
+    // Load message history from server
+    this.chatService.getMsgs();
   }
 
   onSubmit() {
-    const msg = new Message(this.user, this.message);
-    this.chatService.sendMsg(msg)
-      .subscribe((response: any) => {
-        response.success ? console.log('message successful!') : console.log('message failed!');
-      });
-      this.message = '';
+    const msg = new Message(this.user, this.msgText);
+    this.chatService.sendMsg(msg);
+    this.msgText = '';
   }
 }

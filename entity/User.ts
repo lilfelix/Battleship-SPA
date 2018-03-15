@@ -38,8 +38,8 @@ export class User {
     // boards: Board[];
 
     // @JoinColumn() can be emitted in OneToMany/ManyToOne
-    @OneToMany(type => Message, message => message.recipient)
-    receivedMsgs: Message[];
+    // @OneToMany(type => Message, message => message.recipient)
+    // receivedMsgs: Message[];
 
     @OneToMany(type => Message, message => message.sender)
     sentMsgs: Message[];

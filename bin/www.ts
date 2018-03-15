@@ -12,6 +12,7 @@ import "reflect-metadata";
 import { createConnection, Connection, getConnection } from "typeorm";
 import { User } from "../entity/User";
 import { Highscore } from '../entity/Highscore';
+import { Message } from '../entity/Message';
 
 /**
  * Connect to database
@@ -38,7 +39,12 @@ createConnection().then(async connection => {
   highscore2.numGames = 8;
   highscore2.numWon = 5;
   highscore2.numLost = 3;
+  const msg1 = {sender: user1, text:'Hi Alice!'};
+  const msg2 = {sender: user2, text:'Hi Bob!'};
+  const msg3 = {sender: user1, text:'What are you up to?'};
+  const msg4 = {sender: user2, text:'Just checking out this awesome SPA!'};
 
+  await connection.manager.save(Message, [msg1, msg2, msg3, msg4]);
   await connection.manager.save([highscore1, highscore2]);
   const users = await connection.manager.find(User);
 }).catch(error => console.log(error))

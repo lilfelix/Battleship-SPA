@@ -136,3 +136,18 @@ export async function processMsg(msg: Message) {
     server.broadcast({type: 'message', payload: newMsg});
     return (newMsg != null);
 }
+
+export async function getMessages() {
+    const repository = getRepository(Message);
+    const messages = await repository.find({
+        relations: ["sender"],
+        order: {
+            "timestamp": "DESC"
+        }
+    });
+    // Clear the pwHash before sending to client
+    messages.forEach((message) => {
+        message.sender.pwHash = '';
+    });
+    return messages;
+}
