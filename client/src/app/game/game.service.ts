@@ -82,9 +82,11 @@ export class GameService {
         }
         break;
       case 'TORPEDO_FIRED':
-        this.checkHit(event.tile, true);
+        if (!this.gameOver) {
+          this.checkHit(event.tile, true);
+        }
         break;
-     case 'INTERRUPT':
+      case 'INTERRUPT':
         this.gameEventSource.next('INTERRUPT');
         break;
     }
