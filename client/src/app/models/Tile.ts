@@ -17,7 +17,7 @@ export class Tile {
     }
 
     static setTileStyles(tile: Tile, used: boolean, hit: boolean) {
-        tile.used = used;
+       tile.used = used;
         tile.hit = hit;
         tile.tileStyles = {
             'background-color': tile.used ? 'grey' : 'white',

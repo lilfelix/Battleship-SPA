@@ -47,9 +47,9 @@ export class GameService {
         this.processGameEvent(event);
       });
     this.wsService.highscoreEventSource
-    .subscribe((entry: Highscore) => {
-       this.processHighscoreEvent(entry);
-    });
+      .subscribe((entry: Highscore) => {
+        this.processHighscoreEvent(entry);
+      });
   }
 
   // notify server and opponent that this client is ready to play (ships placed on board)
@@ -145,6 +145,17 @@ export class GameService {
   }
 
   checkHit(tile: Tile, clientBoard: boolean) {
+    if (tile.hit) {
+      // Dropping bombs on this tile again won't yield a result
+      if (clientBoard) {
+        this.boards[1].bombsDropped++;
+        this.gameEventSource.next('SHOOT');
+      } else {
+        this.boards[0].bombsDropped++;
+        this.gameEventSource.next('WAIT');
+      }
+      return;
+    }
     if (clientBoard) {
       // Bomb dropped on client's board
       this.boards[1].bombsDropped++;
@@ -201,8 +212,8 @@ export class GameService {
       entry.numLost++;
     }
     this.http.post('highscore', entry, 'updateClientHighscore')
-    .subscribe((result: any) => {
-      result.success ? console.log('highscore sent successfully') : console.log('highscore failed to send');
-    });
+      .subscribe((result: any) => {
+        result.success ? console.log('highscore sent successfully') : console.log('highscore failed to send');
+      });
   }
 }
