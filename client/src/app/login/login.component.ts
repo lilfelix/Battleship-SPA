@@ -26,7 +26,10 @@ export class LoginComponent implements OnInit {
       .filter((event) => (event instanceof NavigationEnd))
       .subscribe((routeData: any) => {
         if (routeData.urlAfterRedirects === '/login') {
-          window.location.reload();
+          if (this.authService.loggedIn) {
+            this.authService.loggedIn = false;
+            window.location.reload();
+          }
         }
       });
   }

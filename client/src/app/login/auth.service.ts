@@ -15,6 +15,7 @@ export class AuthService {
 
   private authUrl = 'auth';
   public user: User;
+  public loggedIn = false;
   @Output() setUserSource = new Subject<User>();
 
   constructor(private http: HttpService, private wsService: WebsocketService) {
@@ -24,7 +25,13 @@ export class AuthService {
 
   // Authenticate existing or newly registered user (type property in autObj differs)
   authUser(authObj: any): Observable<AuthResponse> {
-   return this.http.post(this.authUrl, authObj, 'authUser');
+    const auth = this.http.post(this.authUrl, authObj, 'authUser');
+    auth.subscribe((response: AuthResponse) => {
+      if (Object.keys(response).length !== 0) {
+        this.loggedIn = true;
+      }
+    });
+    return auth;
   }
 
   setUser(user: User) {

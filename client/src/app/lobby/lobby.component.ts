@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, Input } from '@angular/core';
 import { User } from '../models/User';
 import { Challenge } from '../models/Challenge';
 import { LobbyService } from './lobby.service';
@@ -19,14 +19,20 @@ export class LobbyComponent implements OnInit {
   challenges: Challenge[] = [];
   processChallengeSubscription: Subscription;
   displayUserSubscription: Subscription;
+  setUserSubscription: Subscription;
+  loggedIn: boolean;
 
-  constructor(private http: HttpService, private lobbyService: LobbyService) { }
+  constructor(private http: HttpService, private lobbyService: LobbyService, private authService: AuthService) { }
 
   ngOnInit() {
-
-    // Set current user
-    this.user = this.lobbyService.user;
-    console.log('init lobbyCmp user:' + this.user.username);
+    // Update when user logs in
+    this.user = this.authService.user;
+    this.loggedIn = this.authService.loggedIn;
+    this.setUserSubscription = this.authService.setUserSource
+      .subscribe((user: User) => {
+        this.user = user;
+        this.loggedIn = true;
+      });
 
     // GET available players from server
     this.lobbyService.getActiveUsers()

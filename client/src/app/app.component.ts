@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, HostListener, OnDestroy, Output } from '@angular/core';
 import { User } from './models/User';
 import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from './login/auth.service';
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   status = 'User: Guest';
   setUserSubscription: Subscription;
   gameEventSubscription: Subscription;
-  public loggedIn = false;
+  @Output() loggedIn = false;
   public gameStarted = false;
 
   constructor(private authService: AuthService, private lobbyService: LobbyService) {
