@@ -29,6 +29,7 @@ export class GameComponent implements OnInit {
     this.players = this.lobbyService.getPlayers();
     this.gameService.clientStarts = this.lobbyService.clientStarts;
     this.gameService.listenWebSocket();
+    this.gameService.getHighscores();
 
     this.gameEventSubscription = this.gameService.gameEventSource
       .subscribe((status) => {

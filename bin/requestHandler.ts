@@ -83,6 +83,13 @@ export async function getHighscore() {
     return entries;
 }
 
+export async function updateHighscore(hs: Highscore) {
+    const repository = getRepository(Highscore);
+    const newHs = await repository.save(hs);
+    console.log('newly updated highscore :', newHs); 
+    return newHs ? true : false;
+}
+
 // Send challenges to affected sockets.
 export function sendChallenges(obj: any) {
     const payload = obj.payload;

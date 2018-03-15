@@ -68,10 +68,17 @@ router.get('/active', function (req, res) {
     res.json(users);
 });
 
+// GET highscore to client for display
 router.get('/highscore', async function (req, res) {
     const entries = await handler.getHighscore();
     console.log('sending highscore', entries);
     res.json(entries);
+});
+
+// POST updated highscore from client to server
+router.post('/highscore', async function (req, res) {
+    const success = await handler.updateHighscore(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
 });
 
 router.post('/message', function (req, res) {

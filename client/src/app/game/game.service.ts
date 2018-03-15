@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { WebsocketService } from '../websocket.service';
 import { Subject } from 'rxjs/Subject';
 import { Tile } from '../models/Tile';
+import { Highscore } from '../models/Highscore';
 
 @Injectable()
 export class GameService {
@@ -22,11 +23,22 @@ export class GameService {
   public gameOver: boolean;
   public players: User[];
   public boards: Board[];
+  public highscoreEntries: Highscore[];
   private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
   @Output() gameEventSource = new Subject<any>(); // Issue events to game/board component
+  @Output() highscoreEventSource = new Subject<Highscore[]>(); // Issue events to game/board component
 
 
   constructor(private http: HttpService, private wsService: WebsocketService) { }
+
+  getHighscores() {
+    return this.http.get('highscore', 'getHighscore')
+      .subscribe((entries: Highscore[]) => {
+        this.highscoreEntries = entries;
+        this.highscoreEventSource.next(entries);
+        console.log('fetched highscore', entries);
+      });
+  }
 
   listenWebSocket() {
     this.wsService.gameEventSource
@@ -161,12 +173,16 @@ export class GameService {
     }
   }
 
-  // TODO
+  // Update highscore on client and on server after game has ended
   updateClientHighscore(outcome: string) {
+    const hs = this.highscoreEntries.filter(h => h.user.username === this.players[0].username);
+    hs[0].numGames++;
     if (outcome === 'WIN') {
-      const obj = {};
+      hs[0].numWon++;
+      this.http.post('highscore', hs[0], 'updateClientHighscore');
     } else if (outcome === 'DEFEAT') {
-      const obj = {};
+      hs[0].numLost++;
+      this.http.post('highscore', hs[0], 'updateClientHighscore');
     }
   }
 }
