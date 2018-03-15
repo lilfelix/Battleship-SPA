@@ -53,15 +53,24 @@ export function createUser(body: any) {
         });
 }
 
+export async function updateUser(user: User) {
+    const repository = getRepository(User);
+    const oldUser = await repository.findOneById(user.id);
+    if (oldUser == null) {
+        return false;
+    }
+    oldUser.name = user.name;
+    oldUser.username = user.username;
+    const updatedUser = await repository.save(oldUser);
+    updatedUser.pwHash = '';
+    server.broadcast({type: 'profile', payload: updatedUser});
+    return updatedUser ? true : false;
+}
+
 // Active users are those who have a websocket connection open
 export function getActiveUsers() {
     const names: string[] = Array.from(server.openSockets.keys());
     console.log('keys from sockets', names);
-    // const repository = getRepository(User);
-    // const users = await repository.find({
-    // select: ["id", "name", "username"],
-    //     // relations: ["highscore", "games", "boards", "receivedMsgs", "sentMsgs"],
-    // });
     const users: any[] = [];
     names.forEach(n => {
         users.push({ username: n });
