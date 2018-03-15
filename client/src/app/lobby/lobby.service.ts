@@ -39,9 +39,9 @@ export class LobbyService {
 
     this.user = this.authService.user;
     this.setUserSubscription = this.authService.setUserSource
-    .subscribe((user: User) => {
-      this.user = user;
-    });
+      .subscribe((user: User) => {
+        this.user = user;
+      });
 
     this.lobbyEventSubscription = this.wsService.lobbyEventSource
       .subscribe((event: any) => {

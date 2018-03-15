@@ -16,13 +16,14 @@ export class WebsocketService {
   @Output() lobbyEventSource = new Subject<any>();
   @Output() chatEventSource = new Subject<any>();
   @Output() highscoreEventSource = new Subject<any>();
+  @Output() profileEventSource = new Subject<any>();
   public socket$: WebSocketSubject<any>;
   private serverData: any[] = [];
   public user: User;
 
-  constructor() {}
+  constructor() { }
 
-  openConnection(user: User ) {
+  openConnection(user: User) {
     this.user = user;
     console.log('opening web socket for user: ', this.user.username);
     this.socket$ = WebSocketSubject.create('ws://localhost:3000?username=' + this.user.username);
@@ -42,6 +43,9 @@ export class WebsocketService {
           case 'user':
             console.log('sending eventsource from wsService');
             this.lobbyEventSource.next({ status: 'NEW_USER', payload: object.payload });
+            break;
+          case 'profile': // A user has updated their profile
+            this.profileEventSource.next(object.payload);
             break;
           case 'challenge':
             this.lobbyEventSource.next({ status: 'CHALLENGE', payload: object.payload });

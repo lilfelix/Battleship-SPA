@@ -107,14 +107,18 @@ router.post('/challenge', async function (req, res) {
 router.post('/ready', async function (req, res) {
     const success = await handler.forwardScktMsg(req.body, req.body.payload.receiver);
     success ? res.json({ success: true }) : res.json({ success: false });
-    ;
 });
 
 router.post('/torpedo', async function (req, res) {
     const success = await handler.forwardScktMsg(req.body, req.body.payload.receiver);
     success ? res.json({ success: true }) : res.json({ success: false });
-    ;
 })
+
+// POST from client to update profile (user data)
+router.post('/profile', async function (req, res) {
+    const success = await handler.updateUser(req.body);
+    success ? res.json({ success: true }) : res.json({ success: false });
+});
 
 function emptyResponse(res: express.Response, msg: string) {
     console.log(msg);

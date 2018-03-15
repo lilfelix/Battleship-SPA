@@ -22,7 +22,8 @@ export class LobbyComponent implements OnInit {
   setUserSubscription: Subscription;
   loggedIn: boolean;
 
-  constructor(private http: HttpService, private lobbyService: LobbyService, private authService: AuthService) { }
+  constructor(private http: HttpService, private lobbyService: LobbyService, private authService: AuthService,
+  private wsService: WebsocketService) { }
 
   ngOnInit() {
     // Update when user logs in
@@ -43,8 +44,21 @@ export class LobbyComponent implements OnInit {
     // Subscribe to viewing new users that come online
     this.displayUserSubscription = this.lobbyService.displayUserSource
       .subscribe((user: User) => {
-        if (!this.players.some(p => p.username === user.username)) {
+        if (!this.players.some(p => p.username === user.username))  {
           this.players.push(user);
+        }
+      });
+
+    // Subscribe to updated profiles of other users
+    this.wsService.profileEventSource
+      .subscribe((user: User) => {
+        if (user.id !== this.user.id) {
+          const updatedPlayers = this.players.filter(p => p.id === user.id);
+          if (updatedPlayers !== []) {
+            const oldPlayer = updatedPlayers[0];
+            const index = this.players.indexOf(oldPlayer);
+            this.players.splice(index, 1, user);
+          }
         }
       });
 
