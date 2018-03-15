@@ -2,11 +2,15 @@
   <div class="card-body">
     <h5 class="card-title">Trollbox</h5>
     <p class="card-text">Chat with other players</p>
-    <ul class="list-group">
-      <li *ngFor="let msg of messages" class="list-group-item borderless">
-        <p class="font-weight-bold" style="display:inline">{{msg.sender}}: </p>{{msg.text}}
-      </li>
-    </ul>
+    <div class="card" style="padding:5%">
+      <div class="card-body">
+        <ul class="list-group">
+          <li *ngFor="let msg of messages" class="list-group-item borderless">
+            <p class="font-weight-bold" style="display:inline">{{msg.sender}}: </p>{{msg.text}}
+          </li>
+        </ul>
+      </div>
+    </div>
     <form (ngSubmit)="onSubmit(); msgForm.resetForm()" #msgForm="ngForm">
       <div class="form-group">
         <div class="input-group">
