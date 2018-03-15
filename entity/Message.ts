@@ -10,8 +10,8 @@ export class Message {
     @ManyToOne(type => User, user => user.sentMsgs)
     sender: User
 
-    @ManyToOne(type => User, user => user.receivedMsgs)
-    recipient: User //undefined if sent to all?
+    // @ManyToOne(type => User, user => user.receivedMsgs)
+    // recipient: User //undefined if sent to all?
 
     @Column()
     text: string;

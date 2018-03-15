@@ -6,7 +6,7 @@
       <div class="card-body">
         <ul class="list-group">
           <li *ngFor="let msg of messages" class="list-group-item borderless">
-            <p class="font-weight-bold" style="display:inline">{{msg.sender}}: </p>{{msg.text}}
+            <p class="font-weight-bold" style="display:inline">{{msg.sender.username}}: </p>{{msg.text}}
           </li>
         </ul>
       </div>

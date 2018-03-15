@@ -9,6 +9,7 @@ import "reflect-metadata";
 import * as handler from '../bin/requestHandler';
 import { server } from '../bin/www';
 import { User } from '../entity/User';
+import { Message } from '../entity/Message';
 
 const authSecret = '@9O37m1O3ISg';
 export const router = express.Router();
@@ -83,11 +84,8 @@ router.post('/highscore', async function (req, res) {
 });
 
 router.post('/message', function (req, res) {
-    server.broadcast(req.body);
-    // console.log('success in router is', success);
-    // success ? res.json({ success: true }) : res.json({ success: false });
-    // TODO save msg to chat history table in db
-    res.json({ success: true });
+    const success = handler.processMsg(req.body as Message);
+    success ? res.json({ success: true }) : res.json({ success: false });
 });
 
 // Process challenge

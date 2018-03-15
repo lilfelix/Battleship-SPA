@@ -21,6 +21,8 @@ export class ChatService {
     // Subscribe to displaying incoming messages
     this.wsService.chatEventSource
       .subscribe((msg) => { this.messages.push(msg); });
+
+    // Load message history from server
    }
 
   sendMsg(chatObj: any) {

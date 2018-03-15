@@ -126,20 +126,16 @@ export class Server {
 
   // Broadcast to all.
   public broadcast(obj: any) {
-    let success = true;
     this.wss.clients.forEach(function each(client: any) {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(obj), function ack(error: any) {
           if (error == null) {
             console.log('success in server.broadcast: ', obj);
-            success = true;
           } else {
             console.log('failed in server.broadcast: ', [obj, error]);
-            success = false;
           }
         });
       }
     });
-    return success; // Only last msg indicates success/failure
   }
 }

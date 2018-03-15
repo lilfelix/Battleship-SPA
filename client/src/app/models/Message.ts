@@ -2,8 +2,8 @@ import { User } from './User';
 
 export class Message {
     id?: number;
-    sender: string; // username
     recipient?: User;
-    text: string;
     timestamp?: string;
+
+    constructor (private sender: User, private text: string) {}
 }

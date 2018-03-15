@@ -16,6 +16,7 @@ import "reflect-metadata";
 import { createConnection, Connection, getConnection, getRepository } from "typeorm";
 import { User } from "../entity/User";
 import { Highscore } from '../entity/Highscore';
+import { Message } from '../entity/Message';
 const authSecret = '@9O37m1O3ISg';
 const saltRounds = 10;
 
@@ -77,7 +78,7 @@ export async function getHighscore() {
         }
     });
     // Clear the pwHash before sending to client
-    entries.forEach((entry)=> {
+    entries.forEach((entry) => {
         entry.user.pwHash = '';
     });
     return entries;
@@ -86,7 +87,7 @@ export async function getHighscore() {
 export async function updateHighscore(hs: Highscore) {
     const repository = getRepository(Highscore);
     const newHs = await repository.save(hs);
-    console.log('newly updated highscore :', newHs); 
+    console.log('newly updated highscore :', newHs);
     return newHs ? true : false;
 }
 
@@ -118,4 +119,20 @@ export function forwardScktMsg(obj: any, receiver: string) {
     } else {
         return Promise.resolve(false);
     }
+}
+
+export async function processMsg(msg: Message) {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({ username: msg.sender.username });
+    if (user != null) {
+        user.pwHash = '';
+    }
+    const msgRepository = getRepository(Message);
+    let newMsg = msgRepository.create({
+        sender: user,
+        text: msg.text
+    });
+    newMsg = await msgRepository.save(newMsg); 
+    server.broadcast({type: 'message', payload: newMsg});
+    return (newMsg != null);
 }

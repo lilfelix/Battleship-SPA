@@ -25,11 +25,10 @@ export class ChatComponent implements OnInit {
   }
 
   onSubmit() {
-    const chatObj = { type: 'message', payload: { sender: this.user.username, text: this.message } };
-    this.chatService.sendMsg(chatObj)
+    const msg = new Message(this.user, this.message);
+    this.chatService.sendMsg(msg)
       .subscribe((response: any) => {
         response.success ? console.log('message successful!') : console.log('message failed!');
-        // TODO save message to chat history
       });
       this.message = '';
   }
