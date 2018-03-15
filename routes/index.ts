@@ -39,8 +39,9 @@ router.post('/auth', async function (req, res, next) {
     const token = jwt.sign({ username: req.body.username }, authSecret, { expiresIn: '1d' });
     res.cookie('token', token, { maxAge: 360000 });
     res.json(result);
+
+    // Update all clients that new user has logged in
     server.broadcast({ type: 'user', payload: { username: req.body.username } });
-    // updateActiveUsers(result.payload);
 });
 
 // // For all requests after login, authenticate token

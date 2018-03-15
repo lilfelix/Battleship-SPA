@@ -43,7 +43,9 @@ export class LobbyComponent implements OnInit {
     // Subscribe to viewing new users that come online
     this.displayUserSubscription = this.lobbyService.displayUserSource
       .subscribe((user: User) => {
-        if (user.username !== this.user.username) { this.players.push(user); }
+        if (!this.players.some(p => p.username === user.username)) {
+          this.players.push(user);
+        }
       });
 
     // Subscribe to new/accepted/rejected/cancelede challenges from players
