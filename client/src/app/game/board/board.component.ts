@@ -40,8 +40,8 @@ export class BoardComponent implements OnInit {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
       if (!this.gameOver) {
-      this.gameService.sendTorpedo(tile);
-      this.gameService.checkHit(tile, false); // false indicates that it's the opponents board
+        this.gameService.sendTorpedo(tile);
+        this.gameService.checkHit(tile, false); // false indicates that it's the opponents board
       }
     }
   }
