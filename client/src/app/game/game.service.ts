@@ -118,6 +118,7 @@ export class GameService {
       // Bomb dropped on client's board
       this.boards[1].bombsDropped++;
       if (tile.used) {
+        // Bomb hit a ship
         this.boards[1].score++;
         this.boards[0].totalNumShips--;
         Tile.setTileStyles(tile, true, true);
@@ -126,9 +127,11 @@ export class GameService {
           this.gameEventSource.next('DEFEAT');
           this.updateClientHighscore('DEFEAT');
         } else {
-          this.gameEventSource.next('SHOOT');
+          // Opponent gets to shoot again on hit
+          this.gameEventSource.next('WAIT');
         }
       } else {
+        // Change to client's turn on opponent miss
         Tile.setTileStyles(tile, false, true);
         this.gameEventSource.next('SHOOT');
       }
@@ -136,6 +139,7 @@ export class GameService {
       // Bomb dropped on opponent's board
       this.boards[0].bombsDropped++;
       if (tile.used) {
+        // Bomb hit a ship
         this.boards[0].score++;
         this.boards[1].totalNumShips--;
         Tile.setTileStyles(tile, true, true);
@@ -144,9 +148,11 @@ export class GameService {
           this.gameEventSource.next('WIN');
           this.updateClientHighscore('WIN');
         } else {
-          this.gameEventSource.next('WAIT');
+          // Client gets to shoot again on hit
+          this.gameEventSource.next('SHOOT');
         }
       } else {
+        // Change to opponents turn on client miss
         Tile.setTileStyles(tile, false, true);
         this.gameEventSource.next('WAIT');
       }
