@@ -142,7 +142,7 @@ export async function getMessages() {
     const messages = await repository.find({
         relations: ["sender"],
         order: {
-            "timestamp": "DESC"
+            "timestamp": "ASC"
         }
     });
     // Clear the pwHash before sending to client

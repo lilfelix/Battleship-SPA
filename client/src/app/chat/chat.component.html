@@ -17,7 +17,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Message</span>
           </div>
-          <textarea class="form-control" [(ngModel)]="message" name="message" required placeholder="Enter message" aria-label="Message"></textarea>
+          <textarea class="form-control" [(ngModel)]="msgText" name="msgText" required placeholder="Enter message" aria-label="Message"></textarea>
           <button type="submit" class="btn pull-right btn-primary" [disabled]="!msgForm.form.valid">Send</button>
         </div>
       </div>

@@ -27,7 +27,7 @@ export class LobbyComponent implements OnInit {
   ngOnInit() {
     // Update when user logs in
     this.user = this.authService.user;
-    this.loggedIn = this.authService.loggedIn;
+    this.loggedIn = this.user.username !== 'Guest';
     this.setUserSubscription = this.authService.setUserSource
       .subscribe((user: User) => {
         this.user = user;
