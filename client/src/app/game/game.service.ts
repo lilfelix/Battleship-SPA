@@ -25,6 +25,7 @@ export class GameService {
   public boards: Board[];
   public highscoreEntries: Highscore[];
   private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
+  private highscoreEventSubscription: Subscription; // Subscribe to incoming highscore updates via websocket
   @Output() gameEventSource = new Subject<any>(); // Issue events to game/board component
   @Output() highscoreEventSource = new Subject<Highscore[]>(); // Issue events to game/board component
 
@@ -45,6 +46,10 @@ export class GameService {
       .subscribe((event: any) => {
         this.processGameEvent(event);
       });
+    this.wsService.highscoreEventSource
+    .subscribe((entry: Highscore) => {
+       this.processHighscoreEvent(entry);
+    });
   }
 
   // notify server and opponent that this client is ready to play (ships placed on board)
@@ -102,6 +107,18 @@ export class GameService {
         this.gameEventSource.next('INTERRUPT');
         break;
     }
+  }
+
+  processHighscoreEvent(entry: Highscore) {
+    const matchingEntries = this.highscoreEntries.filter(e => e.id === entry.id);
+    if (matchingEntries === []) {
+      this.highscoreEntries.push(entry);
+    } else {
+      const oldEntry = matchingEntries[0];
+      const index = this.highscoreEntries.indexOf(oldEntry);
+      this.highscoreEntries.splice(index, 1, entry);
+    }
+    this.highscoreEventSource.next(this.highscoreEntries);
   }
 
   hideShips(board: Board) {
@@ -175,14 +192,17 @@ export class GameService {
 
   // Update highscore on client and on server after game has ended
   updateClientHighscore(outcome: string) {
-    const hs = this.highscoreEntries.filter(h => h.user.username === this.players[0].username);
-    hs[0].numGames++;
+    console.log('sending HS from updateClientHighscore');
+    const entry = this.highscoreEntries.filter(h => h.user.username === this.players[0].username)[0];
+    entry.numGames++;
     if (outcome === 'WIN') {
-      hs[0].numWon++;
-      this.http.post('highscore', hs[0], 'updateClientHighscore');
+      entry.numWon++;
     } else if (outcome === 'DEFEAT') {
-      hs[0].numLost++;
-      this.http.post('highscore', hs[0], 'updateClientHighscore');
+      entry.numLost++;
     }
+    this.http.post('highscore', entry, 'updateClientHighscore')
+    .subscribe((result: any) => {
+      result.success ? console.log('highscore sent successfully') : console.log('highscore failed to send');
+    });
   }
 }

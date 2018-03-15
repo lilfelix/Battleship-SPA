@@ -7,6 +7,7 @@ import { LobbyService } from './lobby/lobby.service';
 import { ChatService } from './chat/chat.service';
 import { Subject } from 'rxjs/Subject';
 import { Message } from './models/Message';
+import { Highscore } from './models/Highscore';
 
 @Injectable()
 export class WebsocketService {
@@ -14,6 +15,7 @@ export class WebsocketService {
   @Output() gameEventSource = new Subject<any>();
   @Output() lobbyEventSource = new Subject<any>();
   @Output() chatEventSource = new Subject<any>();
+  @Output() highscoreEventSource = new Subject<any>();
   public socket$: WebSocketSubject<any>;
   private serverData: any[] = [];
   public user: User;
@@ -49,6 +51,9 @@ export class WebsocketService {
             break;
           case 'game':
             this.gameEventSource.next(object.payload);
+            break;
+          case 'highscore':
+            this.highscoreEventSource.next(object.payload as Highscore);
             break;
           default:
             console.log('Unidentified object from websocket:');

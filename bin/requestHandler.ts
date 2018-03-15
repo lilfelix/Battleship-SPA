@@ -84,11 +84,12 @@ export async function getHighscore() {
     return entries;
 }
 
-export async function updateHighscore(hs: Highscore) {
+export async function updateHighscore(entry: Highscore) {
     const repository = getRepository(Highscore);
-    const newHs = await repository.save(hs);
-    console.log('newly updated highscore :', newHs);
-    return newHs ? true : false;
+    const updatedEntry = await repository.save(entry);
+    console.log('newly updated highscore :', updatedEntry);
+    server.broadcast({type: 'highscore', payload: updatedEntry});
+    return updatedEntry ? true : false;
 }
 
 // Send challenges to affected sockets.
