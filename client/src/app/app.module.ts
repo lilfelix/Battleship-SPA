@@ -23,7 +23,7 @@ import { CustomReuseStrategy } from './custom-reuse-strategy';
 import { CookieService } from 'ngx-cookie-service';
 import { HighscoreComponent } from './highscore/highscore.component';
 import { ProfileComponent } from './profile/profile.component';
-
+import { ActiveGameResolver } from './active-game-resolver';
 
 @NgModule({
   declarations: [
@@ -51,6 +51,7 @@ import { ProfileComponent } from './profile/profile.component';
     LobbyService,
     ChatService,
     GameService,
+    ActiveGameResolver,
     {provide: RouteReuseStrategy, useClass: CustomReuseStrategy},
     CookieService
   ],

@@ -19,14 +19,13 @@ export class BoardComponent implements OnInit {
 
   @Input() size: number; // Dimension of boards
   @Input() clientTurn = false; // Indicates if it's the client's turn to shoot
+  @Input() gameOver;
   @Input() players: User[]; // players[0] is always the client
-  @Input() gameStarted;
-  @Input() gameOver = false;
   boards: Board[] = []; // boards[0] has id == 1 and belongs to client
   placedShips = false;
   canContinue = false;
 
-  constructor(private gameService: GameService, private lobbyService: LobbyService) { }
+  constructor(private gameService: GameService) { }
 
   ngOnInit() {
     this.boards.push(new Board(1, this.size, this.players[0], false));
@@ -39,7 +38,7 @@ export class BoardComponent implements OnInit {
     if (!board.frozen && board.id === 1) {
       this.canContinue = board.placeShip(tile);
     } else if (board.frozen && board.id === 2 && this.clientTurn) {
-      if (!this.gameOver) {
+      if (this.gameService.activeGame) {
         this.gameService.sendTorpedo(tile);
         this.gameService.checkHit(tile, false); // false indicates that it's the opponents board
       }

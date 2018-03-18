@@ -13,15 +13,14 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Battleship';
+  public title = 'Battleship';
   public user: User;
-  status = 'User: Guest';
-  setUserSubscription: Subscription;
-  gameEventSubscription: Subscription;
-  @Output() loggedIn = false;
+  public status = 'User: Guest';
+  public setUserSubscription: Subscription;
   public gameStarted = false;
+  @Output() loggedIn = false;
 
-  constructor(private authService: AuthService, private lobbyService: LobbyService) {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -32,25 +31,5 @@ export class AppComponent implements OnInit {
         this.status = 'User: ' + this.user.username;
         this.loggedIn = true;
       });
-
-    this.gameEventSubscription = this.lobbyService.gameEventSource
-      .subscribe((initiated: boolean) => { this.gameStarted = initiated; });
   }
-
-  // @HostListener('window:onbeforeunload', ['$event'])
-  // onBeforeUnload() {
-  //   this.deleteAllCookies();
-  // }
-
-  // deleteAllCookies() {
-  //   const cookies = document.cookie.split(';');
-
-  //   for (let i = 0; i < cookies.length; i++) {
-  //     const cookie = cookies[i];
-  //     const eqPos = cookie.indexOf('=');
-  //     const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-  //     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-  //   }
-  // }
-
 }

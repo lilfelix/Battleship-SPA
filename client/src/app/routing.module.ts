@@ -11,8 +11,10 @@ import { GameComponent } from './game/game.component';
 import { BoardComponent } from './game/board/board.component';
 import { HighscoreComponent } from './highscore/highscore.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ActiveGameResolver } from './active-game-resolver';
+import { GameService } from './game/game.service';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
@@ -38,6 +40,10 @@ const appRoutes: Routes = [
   {
     path: 'game',
     component: GameComponent,
+    resolve: {
+      activeGame: ActiveGameResolver
+    },
+    canActivate: [ActiveGameResolver]
   },
   {
     path: 'highscore',
@@ -53,8 +59,8 @@ const appRoutes: Routes = [
     component: PageNotFoundComponent
   }
 ];
-
 @NgModule({
+
   imports: [
     RouterModule.forRoot(
       appRoutes,
@@ -65,4 +71,6 @@ const appRoutes: Routes = [
     RouterModule,
   ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
+

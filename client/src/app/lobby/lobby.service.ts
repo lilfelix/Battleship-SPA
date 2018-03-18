@@ -19,11 +19,10 @@ export class LobbyService {
   private activeUsersURL = 'active';
   private challengeURL = 'challenge';
   public user: User;
-  public opponent: User;
   public clientStarts: boolean;
   @Output() processChallengeSource = new Subject<Challenge>();
   @Output() displayUserSource = new Subject<User>();
-  @Output() gameEventSource = new Subject<any>();
+  @Output() activeGameSource = new Subject<boolean>();
   lobbyEventSubscription: Subscription;
   setUserSubscription: Subscription;
 
@@ -31,12 +30,8 @@ export class LobbyService {
   constructor(
     private http: HttpService,
     private authService: AuthService,
-    private router: Router,
     private wsService: WebsocketService
   ) {
-    this.opponent = new User();
-    this.opponent.username = 'None';
-
     this.user = this.authService.user;
     this.setUserSubscription = this.authService.setUserSource
       .subscribe((user: User) => {
@@ -76,19 +71,5 @@ export class LobbyService {
       .subscribe((result) => {
         result.success ? console.log(successMsg + challenge.receiver) : console.log(errMsg + challenge.receiver);
       });
-    if (status = 'accept') {
-      this.clientStarts = false;
-    }
-  }
-
-  initGame(user: User, opponent: User, clientStarts: boolean) {
-    this.clientStarts = clientStarts;
-    this.opponent = opponent;
-    this.gameEventSource.next(true);
-    this.router.navigate(['game']);
-  }
-  // Returns the users participating in a game that is being initialized
-  getPlayers() {
-    return [this.user, this.opponent];
-  }
+   }
 }

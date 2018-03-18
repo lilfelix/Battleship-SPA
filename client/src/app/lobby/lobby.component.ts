@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { AuthService } from '../login/auth.service';
 import { WebsocketService } from '../websocket.service';
 import { HttpService } from '../http.service';
+import { GameService } from '../game/game.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lobby',
@@ -22,8 +24,14 @@ export class LobbyComponent implements OnInit {
   setUserSubscription: Subscription;
   loggedIn: boolean;
 
-  constructor(private http: HttpService, private lobbyService: LobbyService, private authService: AuthService,
-  private wsService: WebsocketService) { }
+  constructor(
+    private http: HttpService,
+    private lobbyService: LobbyService,
+    private authService: AuthService,
+    private wsService: WebsocketService,
+    private gameService: GameService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     // Update when user logs in
@@ -44,7 +52,7 @@ export class LobbyComponent implements OnInit {
     // Subscribe to viewing new users that come online
     this.displayUserSubscription = this.lobbyService.displayUserSource
       .subscribe((user: User) => {
-        if (!this.players.some(p => p.username === user.username))  {
+        if (!this.players.some(p => p.username === user.username)) {
           this.players.push(user);
         }
       });
@@ -85,7 +93,8 @@ export class LobbyComponent implements OnInit {
         // Create user object for opponent
         const opponent = new User();
         opponent.username = clientStarts ? challenge.receiver : challenge.issuer;
-        this.lobbyService.initGame(this.user, opponent, clientStarts);
+        this.gameService.initGame(this.user, opponent, clientStarts);
+        this.router.navigate(['game']);
         break;
       case 'reject':
         this.challenges = this.challenges.filter(c => c.issuer !== challenge.issuer && c.receiver !== challenge.receiver);
@@ -108,5 +117,12 @@ export class LobbyComponent implements OnInit {
 
   updateChallenge(challenge, status) {
     this.lobbyService.sendChallengeEvent(challenge, status, `successfully ${status}ed challenge: `, `failed to ${status} challenge: `);
+    if (status = 'accept') {
+      const opponent = new User();
+      opponent.username = challenge.issuer;
+      this.gameService.initGame(this.user, opponent, false);
+      this.router.navigate(['game']);
+    }
+
   }
 }

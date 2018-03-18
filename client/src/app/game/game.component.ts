@@ -4,6 +4,7 @@ import { User } from '../models/User';
 import { LobbyService } from '../lobby/lobby.service';
 import { GameService } from './game.service';
 import { Subscription } from 'rxjs/Subscription';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -20,14 +21,19 @@ export class GameComponent implements OnInit {
   private gameEventSubscription: Subscription;
   private statusMsg = 'Place your ships on the board. Click continue when finished';
 
-  constructor(private lobbyService: LobbyService, private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    activatedRoute.data.subscribe((d => {
+      console.log('data available in activatedRoute', d);
+    }));
+  }
 
   ngOnInit() {
     // Fetch boolean from lobby service, to know who starts to shoot
-    this.gameService.clientStarts = this.lobbyService.clientStarts;
-    this.gameService.players = this.lobbyService.getPlayers();
-    this.players = this.lobbyService.getPlayers();
-    this.gameService.clientStarts = this.lobbyService.clientStarts;
+    this.gameService.clientStarts = this.gameService.clientStarts;
+    this.players = this.gameService.players;
     this.gameService.listenWebSocket();
     this.gameService.getHighscores();
 
@@ -47,14 +53,17 @@ export class GameComponent implements OnInit {
             break;
           case 'WIN':
             this.statusMsg = 'GAME OVER\nYou won!\n';
+            this.gameService.activeGame = false;
             this.gameOver = true;
             break;
           case 'DEFEAT':
             this.statusMsg = 'GAME OVER\nYou lost!';
+            this.gameService.activeGame = false;
             this.gameOver = true;
             break;
           case 'INTERRUPT':
             this.statusMsg = 'Game interrupted!';
+            this.gameService.activeGame = false;
             this.gameOver = true;
             break;
         }

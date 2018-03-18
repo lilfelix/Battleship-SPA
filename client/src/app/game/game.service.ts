@@ -10,6 +10,7 @@ import { WebsocketService } from '../websocket.service';
 import { Subject } from 'rxjs/Subject';
 import { Tile } from '../models/Tile';
 import { Highscore } from '../models/Highscore';
+import { LobbyService } from '../lobby/lobby.service';
 
 @Injectable()
 export class GameService {
@@ -19,13 +20,13 @@ export class GameService {
   public clientReady = false;
   public opponentReady = false;
   public clientStarts: boolean; // true if client shoots first after ships have been placed
-  public gameStarted = false; // TODO remove
-  public gameOver: boolean;
+  public activeGame = false; // TODO remove
+  public gameOver = false;
+  public matchFound = false;
   public players: User[];
   public boards: Board[];
   public highscoreEntries: Highscore[];
-  private gameEventSubscription: Subscription; // Subscribe to incoming events via websocket
-  private highscoreEventSubscription: Subscription; // Subscribe to incoming highscore updates via websocket
+  private activeGameSubscription: Subscription; // Subscribe to lobby initializing new games
   @Output() gameEventSource = new Subject<any>(); // Issue events to game/board component
   @Output() highscoreEventSource = new Subject<Highscore[]>(); // Issue events to game/board component
 
@@ -52,6 +53,12 @@ export class GameService {
       });
   }
 
+  initGame(user: User, opponent: User, clientStarts: boolean) {
+    this.clientStarts = clientStarts;
+    this.players = [user, opponent];
+    this.activeGame = true;
+  }
+
   // notify server and opponent that this client is ready to play (ships placed on board)
   sendReadyState(board: Board, players: User[]) {
     const obj = {
@@ -64,12 +71,16 @@ export class GameService {
         if (result.success) {
           this.clientReady = true;
           if (this.opponentReady) {
+            // Both players have placed ships
             this.gameEventSource.next('START');
             if (this.clientStarts) {
               this.gameEventSource.next('SHOOT');
             } else {
               this.gameEventSource.next('WAIT');
             }
+          } else {
+            // Wait until opponent has placed ships
+            this.gameEventSource.next('WAIT');
           }
         } else {
           alert('Error: could not set board. Try again');
