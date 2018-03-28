@@ -4,5 +4,4 @@ package-lock.json
 client/.*
 client/package*
 client/e2e
-README.md
 *.un~
